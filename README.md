@@ -1,2 +1,2 @@
 # Route
-Simple emailing handler, with users profiles and authentication
+Simple emailing handler, with users profiles and authorization
