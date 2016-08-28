@@ -43,19 +43,33 @@ const initServer = function (listener, callbackAfterServerRunning) {
 
 
 import {onGetProfile} from "./onGetProfile";
-import {onJoinToRoute} from "./onJoinToRoute";
-
-
+import {onSignIn} from "./onSignIn";
+import {onLogIn} from "./onLogIn";
+import {onSetProfile} from "./onSetProfile";
+import {onGetAdmin} from "./onGetAdmin";
+import {onUpdateTemplate} from "./onUpdateTemplate";
 /**
  * Main handler for chat events
  * @param {Object} socket
  */
 function socketHandler (socket) {
   // User has connected to Route start page
-  socket.on ("join", onJoinToRoute);
+  socket.on ("logIn", onLogIn);
+
+  // User has connected to Route start page
+  socket.on ("signIn", onSignIn);
 
   // User asks from profile page
   socket.on ("getProfile", onGetProfile);
+
+  // User changes his profile after authorization
+  socket.on ("setProfile", onSetProfile);
+
+  // User changes his profile after authorization
+  socket.on ("getAdmin", onGetAdmin);
+
+  // User changes his profile after authorization
+  socket.on ("updateTemplate", onUpdateTemplate);
 }
 
 export {

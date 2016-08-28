@@ -2,40 +2,39 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>USER PROFILE</title>
+    <title>ROUTE: USER PROFILE</title>
     <link type="text/css" rel="stylesheet" href="routeStyle.css"/>
 </head>
 <body>
-  <div>
-    <h1>User email</h1>
-    <h1 id="userLabel"></h1>
 
-    <h1>Password</h1>
-    <input id="passwordInput" type="text">
+  <h1>Emailing service app</h1>
 
-    <h1>Email template</h1>
-    <input id="profileInput" type="text">
-  </div>
+    <div class="profileDiv">
 
+      <fieldset style="border:none">
+        <p>Please, modify your profile.</p>
+      </fieldset>
 
-  <script>
+      <fieldset>
+        <p>Email</p>
+        <p id="userLabel" style="height:25px"></p>
+      </fieldset>
 
-    // selector function
-    var getNode = function(s) {
-      return document.querySelector(s);
-    };
+      <fieldset>
+        <p>Password</p>
+        <input id="passwordInput" type="text">
+      </fieldset>
 
-    var userLabel = getNode('#userLabel');
-    var passwordInput = getNode('#passwordInput');
-    var profileInput = getNode('#profileInput');
-    userLabel.innerHTML = "bas@gmail.com";
-    passwordInput.value = "1111";
-    profileInput.value = "BASYA!";
+      <fieldset>
+        <p>Reply template</p>
+        <input id="profileInput" type="text">
+      </fieldset>
 
-  </script>
+      <input class="button" id="signInButton" type="button" value="Change"/>
 
+    </div>
 
-  <script src="socket.io-1.2.0.js" defer></script>
-  <script src="myClientProfile.js" defer></script>
+    <script src="socket.io-1.2.0.js" defer></script>
+    <script src="userProfile.js" defer></script>
 </body>
 </html>

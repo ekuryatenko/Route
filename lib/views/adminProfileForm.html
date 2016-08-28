@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ROUTE: USER PROFILE</title>
+    <link type="text/css" rel="stylesheet" href="routeStyle.css"/>
+</head>
+<body>
+
+<h1>Emailing service app</h1>
+<h1>Admin page</h1>
+  <div class="adminDiv">
+
+
+    <fieldset class="adminField">
+      <p>Users</p>
+      <div class="usersListDiv">
+        <ul id="usersList"></ul>
+      </div>
+    </fieldset>
+
+    <fieldset class="adminField">
+      <p>Template</p>
+      <textarea id="templateText" cols="33" rows="15"></textarea>
+      <input class="button" id="changeButton" type="button" value="Change"/>
+    </fieldset>
+  </div>
+
+  <script src="socket.io-1.2.0.js" defer></script>
+  <script  src="adminProfile.js" defer></script>
+
+</body>
+</html>

@@ -1,9 +1,24 @@
-import Path from "path";
+/** ********************************************/
+import {emailHandler} from "./emailHandler.js";
+
+/** ********************************************/
 // Main routes for app server
-export const serverRoutes = [//How divide this part on functional blocks
+export const serverRoutes = [
   {
     method: "GET",
+    path: "/incomingMail/{user}",
+    handler: function(request, reply){
+      emailHandler(reply, request.params.user);
+    }
+  }, {
+    method: "GET",
     path: "/",
+    handler: {
+      file: __dirname + "/views/logInForm.html"
+    }
+  }, {
+    method: "GET",
+    path: "/signInForm.html",
     handler: {
       file: __dirname + "/views/signInForm.html"
     }
@@ -15,21 +30,39 @@ export const serverRoutes = [//How divide this part on functional blocks
     }
   }, {
     method: "GET",
+    path: "/adminProfileForm.html",
+    handler: {
+      file: __dirname + "/views/adminProfileForm.html"
+    }
+  }, {
+    method: "GET",
     path: "/routeStyle.css",
     handler: {
       file: __dirname + "/views/routeStyle.css"
     }
   }, {
     method: "GET",
-    path: "/myClient.js",
+    path: "/logIn.js",
     handler: {
-      file: __dirname + "/client/myClient.js"
+      file: __dirname + "/client/logIn.js"
     }
   }, {
     method: "GET",
-    path: "/myClientProfile.js",
+    path: "/signIn.js",
     handler: {
-      file: __dirname + "/client/myClientProfile.js"
+      file: __dirname + "/client/signIn.js"
+    }
+  }, {
+    method: "GET",
+    path: "/userProfile.js",
+    handler: {
+      file: __dirname + "/client/userProfile.js"
+    }
+  }, {
+    method: "GET",
+    path: "/adminProfile.js",
+    handler: {
+      file: __dirname + "/client/adminProfile.js"
     }
   }, {
     method: "GET",
