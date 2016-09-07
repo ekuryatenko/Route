@@ -16,6 +16,7 @@ export function onGetProfile(ss_user_email) {
     };
 
     socket.emit('setProfile', profile);
+
   });
 }
 

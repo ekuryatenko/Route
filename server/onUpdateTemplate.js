@@ -10,16 +10,17 @@ export function onUpdateTemplate(newTemplate) {
   var update = {
     $set: {
       version: newTemplate.version,
-      text:newTemplate.text
+      text: newTemplate.text
     }
   };
   var options = {
     upsert: true
   };
 
-  templates.findOneAndUpdate (find,
-    update ,
-    options    ,
+  templates.findOneAndUpdate (
+    find,
+    update,
+    options,
     function(err, r) {
         if(err){
           throw err;

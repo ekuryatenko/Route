@@ -102,7 +102,7 @@ h1 {
 .adminDiv {
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
+  /*flex-wrap: wrap;*/
   justify-content: space-around;
   align-content: space-around;
 

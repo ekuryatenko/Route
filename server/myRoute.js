@@ -1,14 +1,30 @@
 /** ********************************************/
-import {emailHandler} from "./emailHandler.js";
+import {getTamplateSample} from "./pathHandler.js";
+import {incomingMailHandler} from "./incomingMailHandler.js";
+import {adminHandler} from "./adminHandler.js";
 
 /** ********************************************/
 // Main routes for app server
 export const serverRoutes = [
   {
+    method: "POST",
+    path: "/admin",
+    handler: function (request, reply) {
+      adminHandler(request, reply);
+    }
+  },
+  {
+    method: "POST",
+    path: "/incomingMail",
+    handler: function (request, reply) {
+      incomingMailHandler(request, reply);
+    }
+  },
+  {
     method: "GET",
-    path: "/incomingMail/{user}",
-    handler: function(request, reply){
-      emailHandler(reply, request.params.user);
+    path: "/path/{user}",
+    handler: function (request, reply) {
+      getTamplateSample(reply, request.params.user);
     }
   }, {
     method: "GET",
