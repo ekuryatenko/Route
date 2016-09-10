@@ -1,6 +1,6 @@
 // Establish a connection to the mongo database
 import {MongoClient as MONGO_CLIENT} from "mongodb";
-import {DB_URI as uri} from "./../myServer";
+const uri = "mongodb://localhost:27017/route";
 
 export default (function(){
   return {
@@ -10,29 +10,34 @@ export default (function(){
   };
 })();
 
-function getAdminPas(err, callback){
-  MONGO_CLIENT.connect (uri, (err, db) => {
-    if (err) {
-      throw new Error (err);
-    }
+function getAdminPas(){
+  return new Promise (function (resolve, reject) {
+    connectToBase()
+      .then(
+        db => {
+          //Get template piece for this user
+          var users = db.collection ('users');
+          users
+            .find ({
+              'user_email': "admin"
+            })
+            .limit (1)
+            .next (function (err, profile) {
+              if (err) throw err;
 
-    //Get template piece for this user
-    var users = db.collection ('users');
-    users
-      .find ({
-        'user_email': "admin"
-      })
-      .limit (1)
-      .next (function (err, profile) {
-        if (err) throw err;
+              db.close ();
 
-        db.close ();
+              console.log (profile.password);
 
-        if(callback) {
-          callback (profile.password);
+              resolve(profile);
+          });
+        },
+        err => {
+          reject(new Error(err));
         }
-      });
-  })
+      );
+  });
+
 }
 
 function getMainText(err, ver, callback){
@@ -80,6 +85,16 @@ function getAllUsers(err, callback) {
       if (callback) {
         callback (res);
       }
+    });
+  });
+}
+
+
+function connectToBase(){
+  return new Promise (function (resolve, reject) {
+    MONGO_CLIENT.connect (uri, (err, db) => {
+      resolve(db);
+      resolve(err);
     });
   });
 }

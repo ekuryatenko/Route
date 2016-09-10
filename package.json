@@ -1,10 +1,9 @@
 {
   "name": "route",
   "version": "1.0.0",
-  "main": "./lib/app.js",
+  "main": "./runTest/test.js",
   "scripts": {
-    "postinstall": "babel server --out-dir lib",
-    "compile": "babel server --out-dir lib"
+    "compile": "babel test --out-dir runTest"
   },
   "author": "",
   "license": "ISC",
