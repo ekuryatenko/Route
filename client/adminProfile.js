@@ -66,7 +66,7 @@ CHANGE_BUTTON.addEventListener('click', function(event){
 });
 
 SEND_TO_ALL_BUTTON.addEventListener('click', function(event){
-
+  socket.emit('sendToAll');
 });
 
 /** ======================

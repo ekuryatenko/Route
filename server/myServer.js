@@ -41,13 +41,13 @@ const initServer = function (listener, callbackAfterServerRunning) {
   });
 };
 
-
-import {onGetProfile} from "./onGetProfile";
-import {onSignIn} from "./onSignIn";
-import {onLogIn} from "./onLogIn";
-import {onSetProfile} from "./onSetProfile";
-import {onGetAdmin} from "./onGetAdmin";
-import {onUpdateTemplate} from "./onUpdateTemplate";
+import {onGetProfile} from "./socket/onGetProfile";
+import {onSignIn} from "./socket/onSignIn";
+import {onLogIn} from "./socket/onLogIn";
+import {onSetProfile} from "./socket/onSetProfile";
+import {onGetAdmin} from "./socket/onGetAdmin";
+import {onUpdateTemplate} from "./socket/onUpdateTemplate";
+import {onSendToAll} from "./socket/onSendToAll";
 /**
  * Main handler for chat events
  * @param {Object} socket
@@ -70,6 +70,9 @@ function socketHandler (socket) {
 
   // User changes his profile after authorization
   socket.on ("updateTemplate", onUpdateTemplate);
+
+  // User changes his profile after authorization
+  socket.on ("sendToAll", onSendToAll);
 }
 
 export {

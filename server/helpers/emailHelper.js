@@ -5,6 +5,13 @@ const MY_APP_EMAILS_SUBJECT = 'EMAIL_APP RESPONSE';
 
 export default (function(){
   return {
+    getIncomingMailSender (request){
+      var data = request.payload;
+      var incomingFrom = data.envelope.from;
+      console.log("GET MESSAGE FROM:" + incomingFrom);
+      return incomingFrom;
+    },
+
     sendResponseMail(adress, text, callback){
       var helper = sg.mail;
       var from_email = new helper.Email(MY_APP_EMAIL);
@@ -31,11 +38,23 @@ export default (function(){
       });
     },
 
-    getIncomingMailSender (request){
-      var data = request.payload;
-      var incomingFrom = data.envelope.from;
-      console.log("GET MESSAGE FROM:" + incomingFrom);
-      return incomingFrom;
+    sendEmailsInCycle(arr, mainText){
+      let emailsCnt = 0;
+
+      setTimeout(function(){
+        console.log("IT WERE SENDED " + emailsCnt + " EMAILS OF " + arr.length);
+      }, arr.length * 2000);
+
+      for(var item of arr){
+        var text = mainText;
+        text = text.replace(/{{userName}}/g, item.emailTemplate);
+
+        this.sendResponseMail(item.user_email, text, function(status){
+          if(parseInt(status) < 400) {
+            emailsCnt++;
+          }
+        });
+      }
     }
   };
 })();

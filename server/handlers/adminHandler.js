@@ -1,5 +1,5 @@
-import dbHelper from "./dbHelper";
-import emailHelper from "./emailHelper";
+import dbHelper from "./../helpers/dbHelper";
+import emailHelper from "./../helpers/emailHelper";
 
 export function adminHandler(request, reply) {
   checkAdmin(request, reply, function(){
@@ -14,7 +14,7 @@ export function adminHandler(request, reply) {
       });
       arr.splice(adminIdx, 1);
 
-      sendEmailsInCycle(arr, mainText);
+      emailHelper.sendEmailsInCycle(arr, mainText);
     })
   })
 
@@ -49,24 +49,5 @@ function checkAdmin(request, reply, callback){
   } else {
     console.log("GET WRONG ADMIN POST!");
     reply ("ADMIN IS NOT AUTHORIZED!");
-  }
-}
-
-function sendEmailsInCycle(arr, mainText){
-  let emailsCnt = 0;
-
-  setTimeout(function(){
-    console.log("IT WERE SENDED " + emailsCnt + " EMAILS OF " + arr.length);
-  }, arr.length * 2000);
-
-  for(var item of arr){
-    var text = mainText;
-    text = text.replace(/{{userName}}/g, item.emailTemplate);
-
-    emailHelper.sendResponseMail(item.user_email, text, function(status){
-      if(parseInt(status) < 400) {
-        emailsCnt++;
-      }
-    });
   }
 }

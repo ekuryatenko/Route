@@ -1,6 +1,6 @@
 // Establish a connection to the mongo database
 import {MongoClient as MONGO_CLIENT} from "mongodb";
-import {DB_URI as uri} from "./myServer";
+import {DB_URI as uri} from "./../myServer";
 
 export default (function(){
   return {
@@ -46,11 +46,13 @@ function getMainText(err, ver, callback){
       .find ({version: ver})
       .limit (1)
       .next (function (err, template) {
-      if (err) throw err;
+        if (err) throw err;
 
-      if (callback) {
-        callback (template.text);
-      }
+        db.close ();
+
+        if (callback) {
+          callback (template.text);
+        }
     });
   });
 }

@@ -1,6 +1,6 @@
 // Establish a connection to the mongo database
 import {MongoClient as MONGO_CLIENT} from "mongodb";
-import {DB_URI as uri} from "./myServer";
+import {DB_URI as uri} from "./../myServer";
 
 /** I have to learn more about regExps here */
 //const regExpSample = '/{/{user/}/}';
