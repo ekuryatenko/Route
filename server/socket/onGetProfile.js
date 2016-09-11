@@ -1,22 +1,17 @@
+import dbHelper from "./../helpers/dbHelper";
+/**
+ * Fires when user has loaded user profile page and asks
+ * to get his own personal data to fill in page forms
+ *
+ * Result - user profile obj is sended to user
+ *
+ * @param {string} ss_user_email - User login (email)
+ */
 export function onGetProfile(ss_user_email) {
   const socket = this;
-  const db = socket.db;
 
-  var users = db.collection('users');
-
-  users.find({
-    'user_email': ss_user_email
-  }).toArray(function(err, dbArr) {
-    if (err) throw err;
-
-    let profile = {
-      user_email: dbArr[0].user_email,
-      password: dbArr[0].password,
-      emailTemplate: dbArr[0].emailTemplate
-    };
-
+  dbHelper.getUserProfile(null, ss_user_email, (profile) => {
     socket.emit('setProfile', profile);
-
   });
 }
 

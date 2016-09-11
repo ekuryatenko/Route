@@ -1,9 +1,7 @@
-/** ********************************************/
 import {getTamplateSample} from "./handlers/pathHandler.js";
 import {incomingMailHandler} from "./handlers/incomingMailHandler.js";
 import {adminHandler} from "./handlers/adminHandler.js";
 
-/** ********************************************/
 // Main routes for app server
 export const serverRoutes = [
   {

@@ -6,7 +6,8 @@ export default (function(){
   return {
     getAdminPas: getAdminPas,
     getAllUsers: getAllUsers,
-    getMainText: getMainText
+    getMainText: getMainText,
+    getUserProfile: getUserProfile
   };
 })();
 
@@ -33,6 +34,34 @@ function getAdminPas(err, callback){
         }
       });
   })
+}
+
+function getUserProfile(err, user, callback){
+  MONGO_CLIENT.connect (uri, (err, db) => {
+    if (err) {
+      throw new Error (err);
+    }
+
+    var users = db.collection('users');
+
+    users.find({
+      'user_email': user
+    }).toArray(function(err, dbArr) {
+      if (err) throw err;
+
+      let profile = {
+        user_email: dbArr[0].user_email,
+        password: dbArr[0].password,
+        emailTemplate: dbArr[0].emailTemplate
+      };
+
+      db.close ();
+
+      if (callback) {
+        callback (profile);
+      }
+    });
+  });
 }
 
 function getMainText(err, ver, callback){

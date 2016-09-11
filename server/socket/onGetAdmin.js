@@ -1,3 +1,15 @@
+const DEFAULT_TEMPLATE_TEXT = "Hello, {{userName}}!";
+
+/**
+ * Fires when admin has loaded admin page and asks
+ * to get content to fill in page forms
+ * The main admin content is users list and email template
+ * text
+ *
+ * Result - admin page content obj is sended to admin
+ *
+ * @param {string} ss_user_email - User login (email)
+ */
 export function onGetAdmin(ss_user_email) {
   const socket = this;
   const db = socket.db;
@@ -27,7 +39,7 @@ export function onGetAdmin(ss_user_email) {
           adminPageContent.templateText = template.text;
         }else{
           //It's first call of page - show some text to admin
-          adminPageContent.templateText = "Hello, {{userName}}!"
+          adminPageContent.templateText = DEFAULT_TEMPLATE_TEXT;
         }
 
         socket.emit('setAdmin', adminPageContent);
