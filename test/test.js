@@ -8,13 +8,42 @@ console.log("Server is listening");*/
 "use strict";
 import dbHelper from "./dbHelper";
 
+/*let tick = new Promise(function(resolve, reject) {
+  setTimeout(resolve(text), 1000);
+});*/
+
 dbHelper.getAdminPas().then(
-  result => {
-    console.log(result);
-  },
-  err => {
-    throw err;
-  }
-);
+    pass => {
+      return (pass);
+    },
+    err => {
+      throw err;
+    }
+  )
+  .then(
+    result => {
+      console.log("1: " + result);
+
+      return new Promise((res, rej)=>{
+        setTimeout(function () {
+          res(result.split(""));
+          rej("Error");
+        }, 1000);
+      });
+    },
+    err => {
+      console.log(err);
+    }
+  )
+  .then(
+    (arr) => {
+      console.log("2: " + arr[0]);
+    },
+    (err) => {
+      console.log("2: ERROR " + err);
+    }
+  );
+
+
 
 

@@ -27,9 +27,7 @@ function getAdminPas(){
 
               db.close ();
 
-              console.log (profile.password);
-
-              resolve(profile);
+              resolve(profile.password);
           });
         },
         err => {
