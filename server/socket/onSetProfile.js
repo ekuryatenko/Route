@@ -28,8 +28,6 @@ export function onSetProfile(obj) {
 
       // Confirm user
       socket.emit ('alert', 'Profile changed!');
-
-
     }
   );
 
