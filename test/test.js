@@ -24,12 +24,14 @@ dbHelper.getAdminPas().then(
     result => {
       console.log("1: " + result);
 
-      return new Promise((res, rej)=>{
+      return [351];
+
+      /*return new Promise((res, rej)=>{
         setTimeout(function () {
           res(result.split(""));
           rej("Error");
         }, 1000);
-      });
+      });*/
     },
     err => {
       console.log(err);
@@ -41,6 +43,16 @@ dbHelper.getAdminPas().then(
     },
     (err) => {
       console.log("2: ERROR " + err);
+      return arr[0] + 200;
+    }
+  )
+  .then(
+    (int) => {
+      console.log("3: " + int);
+      //return int;
+    },
+    (err) => {
+      console.log("3: ERROR " + err);
     }
   );
 
