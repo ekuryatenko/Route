@@ -1,4 +1,5 @@
 import dbHelper from "./../helpers/dbHelper";
+
 /**
  * Fires when user has loaded user profile page and asks
  * to get his own personal data to fill in page forms

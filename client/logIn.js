@@ -31,7 +31,7 @@ socket.on('alert', function(msg){
 });
 
 // clear the login form
-socket.on('clear-form', function(){
+socket.on('clean-form', function(){
   USER_EMAIL_INPUT.value = '';
   FPASS_INPUT.value = '';
 });

@@ -65,7 +65,7 @@ CHANGE_BUTTON.addEventListener('click', function(event){
 
   var profile_obj = {
     user_email: userLabel.innerHTML,
-    fpass: PASSWORD_INPUT.value,
+    password: PASSWORD_INPUT.value,
     emailTemplate: PROFILE_INPUT.value
   };
 
@@ -90,7 +90,7 @@ function changeProfile(event) {
 
     var profile_obj = {
       user_email: userLabel.innerHTML,
-      fpass: PASSWORD_INPUT.value,
+      password: PASSWORD_INPUT.value,
       emailTemplate: PROFILE_INPUT.value
     };
 

@@ -7,7 +7,10 @@ export default (function(){
     getAdminPas: getAdminPas,
     getAllUsers: getAllUsers,
     getMainText: getMainText,
-    getUserProfile: getUserProfile
+    getUserProfile: getUserProfile,
+    addUserToBase: addUserToBase,
+    updateProfile: updateProfile,
+    updateTemplate: updateTemplate
   };
 })();
 
@@ -96,19 +99,112 @@ function getAllUsers(err, callback) {
 
     var remainInResult = {
       _id: 0,
-      password: 0
+      user_email: 1,
+      password: 1,
+      emailTemplate: 1
     };
 
     users
       .find ({}, remainInResult)
       .toArray (function (err, res) {
+        if (err) throw err;
+
+        db.close ();
+
+        if (callback) {
+          callback (res);
+        }
+    });
+  });
+}
+
+function updateProfile(err, newProfile, callback){
+  MONGO_CLIENT.connect (uri, (err, db) => {
+    if (err) {
+      throw new Error (err);
+    }
+
+    // create a database variable
+    var users = db.collection ('users');
+
+    users.findOneAndUpdate (
+      {
+        user_email: newProfile.user_email
+      } ,
+      {
+        $set: {
+          password: newProfile.password,
+          emailTemplate: newProfile.emailTemplate
+        }
+      } ,
+      (err) => {
+        if (err) throw err;
+
+        db.close ();
+
+        if (callback) {
+          getUserProfile(null, newProfile.user_email,  callback)
+        }
+      });
+  });
+}
+
+function addUserToBase(err, newProfile, callback){
+  MONGO_CLIENT.connect (uri, (err, db) => {
+    if (err) {
+      throw new Error (err);
+    }
+
+    // create a database variable
+    var users = db.collection ('users');
+
+    users.insertOne(newProfile, () => {
       if (err) throw err;
 
       db.close ();
 
       if (callback) {
-        callback (res);
+        callback ();
       }
+    });
+  });
+}
+
+function updateTemplate(err, newTemplate, callback){
+  MONGO_CLIENT.connect (uri, (err, db) => {
+    if (err) {
+      throw new Error (err);
+    }
+
+    // create a database variable
+    var templates = db.collection('templates');
+
+    var find = {version: newTemplate.version};
+    var update = {
+      $set: {
+        version: newTemplate.version,
+        text: newTemplate.text
+      }
+    };
+
+    var options = {
+      upsert: true
+    };
+
+    templates.findOneAndUpdate (
+      find,
+      update,
+      options,
+      (err, res) => {
+        if(err){
+          throw err;
+        }
+
+        db.close();
+
+        if (callback) {
+          callback(res);
+        }
     });
   });
 }

@@ -1,34 +1,20 @@
-export function onSetProfile(obj) {
+import dbHelper from "./../helpers/dbHelper";
+
+/**
+ * Fires when user has changed fields on his profile page
+ *
+ * Result - user profile data has changed, and user get prompt
+ *
+ * @param {Object} newProfile - New user profile
+ */
+export function onSetProfile(newProfile) {
   // With arrows i had undefined instead this, as socket, after transpilling
   const socket = this;
-  const db = socket.db;
 
-  // create a database variable
-  var users = db.collection ('users');
+  dbHelper.updateProfile(null, newProfile, (profileFromDB) => {
+    socket.emit('setProfile', profileFromDB);
 
-  users.findOneAndUpdate ({user_email: obj.user_email}
-    , {
-      $set: {
-        password: obj.fpass,
-        emailTemplate: obj.emailTemplate
-      }
-    }
-    , function(err, res){
-      if(err){
-        throw err;
-      }
-
-      // Reload data on page
-      let profile = {
-        user_email: obj.user_email,
-        password: obj.fpass,
-        emailTemplate: obj.emailTemplate
-      };
-      socket.emit('setProfile', profile);
-
-      // Confirm user
-      socket.emit ('alert', 'Profile changed!');
-    }
-  );
-
+    // Confirm user
+    socket.emit ('alert', 'Profile changed!');
+  });
 }
