@@ -1,9 +1,8 @@
-import cminHelper from "./../helpers/cloudmailinHelper";
 import sgHelper from "./../helpers/sendgridHelper";
 import dbHelper from "./../helpers/dbHelper";
 
 /**
- * Handle incoming POST request from CLOUDMAILIN service
+ * Handle incoming POST request from SENDGRID service
  * This POST contains incoming email
  * Function parses sender, and checks if it's registered user
  * Send reply email with user profile settings
@@ -15,7 +14,7 @@ export function incomingMailHandler (request, reply) {
   reply ("OK!");
 
   // Parse request from CLOUDMAILIN service
-  const inEmailAddr = cminHelper.getIncomingMailAdresses(request);
+  const inEmailAddr = sgHelper.getIncomingMailAddresses(request);
 
   isDbContainUser(
     null,

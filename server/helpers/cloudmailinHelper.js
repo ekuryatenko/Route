@@ -2,7 +2,7 @@ const MY_APP_EMAIL = process.env.CLOUDMAILIN_EMAIL;// ????????????
 
 export default (function(){
   return {
-    getIncomingMailAdresses (request){
+    getIncomingMailAddresses (request){
       let data = request.payload;
 
       let addresses = {
