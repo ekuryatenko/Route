@@ -40,13 +40,13 @@ const initServer = function (listener, callbackAfterServerRunning) {
   });
 };
 
-import {onGetProfile} from "./socket/onGetProfile";
-import {onSignIn} from "./socket/onSignIn";
-import {onLogIn} from "./socket/onLogIn";
-import {onSetProfile} from "./socket/onSetProfile";
-import {onGetAdmin} from "./socket/onGetAdmin";
-import {onUpdateTemplate} from "./socket/onUpdateTemplate";
-import {onSendToAll} from "./socket/onSendToAll";
+import {onGetProfile} from "./socketHandlers/onGetProfile";
+import {onSignIn} from "./socketHandlers/onSignIn";
+import {onLogIn} from "./socketHandlers/onLogIn";
+import {onSetProfile} from "./socketHandlers/onSetProfile";
+import {onGetAdmin} from "./socketHandlers/onGetAdmin";
+import {onUpdateTemplate} from "./socketHandlers/onUpdateTemplate";
+import {onSendToAll} from "./socketHandlers/onSendToAll";
 
 /**
  * Main socket handler for chat events

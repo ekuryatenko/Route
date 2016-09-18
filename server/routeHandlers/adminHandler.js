@@ -1,6 +1,14 @@
 import dbHelper from "./../helpers/dbHelper";
-import emailHelper from "./../helpers/emailHelper";
+import sgHelper from "./../helpers/sendgridHelper";
 
+/**
+ * Replies on admin's POST
+ * Checks admin password
+ * Sends email template to every user from base
+ *
+ * @param {Object} request
+ * @param {Object} reply
+ */
 export function adminHandler(request, reply) {
   checkAdmin(request, reply, function(){
     console.log("ADMIN PASS AUTHORIZATION SUCCESSFULLY!!");
@@ -9,23 +17,32 @@ export function adminHandler(request, reply) {
   dbHelper.getMainText(null, "1", function(mainText){
     dbHelper.getAllUsers(null, function(arr){
       //Remove admin from arr
-      var adminIdx = arr.findIndex((item)=>{
+      let adminIdx = arr.findIndex((item)=>{
         return item.user_email == "admin";
       });
       arr.splice(adminIdx, 1);
 
-      emailHelper.sendEmailsInCycle(arr, mainText);
+      sgHelper.sendEmailsInCycle(arr, mainText);
     })
   })
 
 }
 
+/**
+ * Checks admin password from POST
+ * Gets admin profile from base and
+ * interacts with admin due to password validation
+ *
+ * @param {Object} request
+ * @param {Object} reply
+ * @param {Function} callback
+ */
 function checkAdmin(request, reply, callback){
   if (request.payload) {
-    var data = request.payload;
+    let data = request.payload;
 
     if (data.password) {
-      var pas = data.password;
+      let pas = data.password;
 
       dbHelper.getAdminPas(null, function(adminPas){
         if (pas == adminPas) {

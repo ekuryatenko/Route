@@ -1,6 +1,6 @@
 //Sendgrid settings
 var sg = require('sendgrid')(process.env.SENDGRID_API_KEY);
-const MY_APP_EMAIL = process.env.CLOUDMAILIN_EMAIL;
+const MY_APP_EMAIL = process.env.CLOUDMAILIN_EMAIL;// ????????????
 const MY_APP_EMAILS_SUBJECT = 'EMAIL_APP RESPONSE';
 
 export default (function(){

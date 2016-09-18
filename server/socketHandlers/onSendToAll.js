@@ -1,5 +1,5 @@
 import dbHelper from "./../helpers/dbHelper";
-import emailHelper from "./../helpers/emailHelper";
+import emailHelper from "./../helpers/sendgridHelper";
 
 /**
  * Fires when admin click "Send to all users" button

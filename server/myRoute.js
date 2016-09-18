@@ -1,6 +1,6 @@
-import {getTamplateSample} from "./handlers/pathHandler.js";
-import {incomingMailHandler} from "./handlers/incomingMailHandler.js";
-import {adminHandler} from "./handlers/adminHandler.js";
+import {getTemplateSample} from "./routeHandlers/pathHandler.js";
+import {incomingMailHandler} from "./routeHandlers/incomingMailHandler.js";
+import {adminHandler} from "./routeHandlers/adminHandler.js";
 
 // Main routes for app server
 export const serverRoutes = [
@@ -22,7 +22,7 @@ export const serverRoutes = [
     method: "GET",
     path: "/path/{user}",
     handler: function (request, reply) {
-      getTamplateSample(reply, request.params.user);
+      getTemplateSample(reply, request.params.user);
     }
   }, {
     method: "GET",
