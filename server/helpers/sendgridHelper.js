@@ -1,21 +1,28 @@
-//Sendgrid settings
+// Sendgrid settings
 var sg = require('sendgrid')(process.env.SENDGRID_API_KEY);
-const MY_APP_EMAIL = process.env.CLOUDMAILIN_EMAIL;// ????????????
+
 const MY_APP_EMAILS_SUBJECT = 'EMAIL_APP RESPONSE';
+const CYCLE_SENDING_SENDER_ADDR = 'autoInfo@allmails.cryptic-lowlands-96337.cu.cc';
 
 export default (function(){
   return {
-    getIncomingMailSender (request){
+    getIncomingMailAddresses (request){
       var data = request.payload;
-      var incomingFrom = data.envelope.from;
-      console.log("GET MESSAGE FROM:" + incomingFrom);
-      return incomingFrom;
+
+      let addresses = {
+        incomingSender: data.from.split("<")[1].split(">")[0],
+        incomingReciever:  data.to
+      };
+
+      console.log("GET MESSAGE FROM:" + addresses.incomingSender + " TO: " + addresses.incomingReciever);
+
+      return addresses;
     },
 
-    sendResponseMail(adress, text, callback){
+    sendResponseMail(from, to, text, callback){
       var helper = sg.mail;
-      var from_email = new helper.Email(MY_APP_EMAIL);
-      var to_email = new helper.Email(adress);
+      var from_email = new helper.Email(from);
+      var to_email = new helper.Email(to);
       var subject = MY_APP_EMAILS_SUBJECT;
       var content = new helper.Content('text/plain', text);
       var mail = new helper.Mail(from_email, subject, to_email, content);
@@ -49,10 +56,14 @@ export default (function(){
         var text = mainText;
         text = text.replace(/{{userName}}/g, item.emailTemplate);
 
-        this.sendResponseMail(item.user_email, text, function(status){
-          if(parseInt(status) < 400) {
-            emailsCnt++;
-          }
+        this.sendResponseMail(
+          CYCLE_SENDING_SENDER_ADDR,
+          item.user_email,
+          text,
+          (status)=>{
+            if(parseInt(status) < 400) {
+              emailsCnt++;
+            }
         });
       }
     }

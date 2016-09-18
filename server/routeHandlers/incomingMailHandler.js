@@ -15,16 +15,16 @@ export function incomingMailHandler (request, reply) {
   reply ("OK!");
 
   // Parse request from CLOUDMAILIN service
-  const emailFrom = cminHelper.getIncomingMailSender(request);
+  const inEmailAddr = cminHelper.getIncomingMailAdresses(request);
 
   isDbContainUser(
     null,
-    emailFrom,
+    inEmailAddr.incomingSender,
     (found, userProfile)=>{
       if(found){
-        sendReplyEmailToUser(emailFrom, userProfile);
+        sendReplyEmailToUser(inEmailAddr, userProfile);
       }else{
-        sendToNotRegistered(emailFrom);
+        sendToNotRegistered(inEmailAddr);
       }
   });
 }
@@ -48,12 +48,13 @@ function isDbContainUser(err, incomingMailSender, callback){
     }
 
     if(!found && callback){
+      // Some profile param should be here for upper level function
       callback(found, profile);
     }
   });
 }
 
-function sendReplyEmailToUser(emailFrom, userProfile){
+function sendReplyEmailToUser(addresses, userProfile){
   // "1" is version of template to for all users
   dbHelper.getMainText(null, "1", (mainResponseText) => {
     let userTemplatePiece = userProfile.emailTemplate;
@@ -61,11 +62,17 @@ function sendReplyEmailToUser(emailFrom, userProfile){
     //Modify main response text for current user profile
     mainResponseText = mainResponseText.replace (/{{userName}}/g, userTemplatePiece);
 
-    sgHelper.sendResponseMail(emailFrom, mainResponseText);
+    let from = addresses.incomingReciever,
+      to = addresses.incomingSender;
+
+    sgHelper.sendResponseMail(from, to, mainResponseText);
   });
 }
 
-function sendToNotRegistered(emailFrom){
-  sgHelper.sendResponseMail(emailFrom, "YOU ARE NOT REGISTERED!");
+function sendToNotRegistered(addresses){
+  let from = addresses.incomingReciever,
+    to = addresses.incomingSender;
+
+  sgHelper.sendResponseMail(from, to, "YOU ARE NOT REGISTERED!");
 }
 

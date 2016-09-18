@@ -2,11 +2,17 @@ const MY_APP_EMAIL = process.env.CLOUDMAILIN_EMAIL;// ????????????
 
 export default (function(){
   return {
-    getIncomingMailSender (request){
-      var data = request.payload;
-      var incomingFrom = data.envelope.from;
-      console.log("GET MESSAGE FROM:" + incomingFrom);
-      return incomingFrom;
+    getIncomingMailAdresses (request){
+      let data = request.payload;
+
+      let addresses = {
+        incomingSender: data.envelope.from,
+        incomingReciever: data.envelope.to
+      };
+
+      console.log("GET MESSAGE FROM:" + addresses.incomingSender);
+
+      return addresses;
     }
   };
 })();
