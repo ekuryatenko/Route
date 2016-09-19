@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "main": "./lib/app.js",
   "scripts": {
-    "postinstall": "babel server --out-dir lib",
-    "compile": "babel server --out-dir lib"
+    "postinstall": "babel src --out-dir lib",
+    "compile": "babel src --out-dir lib",
+    "test": "babel app.js --out-dir lib"
   },
   "author": "",
   "license": "ISC",
