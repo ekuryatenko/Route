@@ -3,46 +3,47 @@
  **************************/
 
 // Returns reference to selector page object
-var getNode = function(selector) {
+const getNode = (selector) => {
   return document.querySelector(selector);
 };
 
 // Get the form nodes
-var USER_EMAIL_INPUT = getNode("#user_email_input"),
-  FPASS_INPUT = getNode("#password_first"),
-  LOGIN_BUTTON = getNode("#logInButton"),
-  SIGNIN_BUTTON = getNode("#signInButton");
+const USER_EMAIL_INPUT = getNode("#user_email_input");
+const  FPASS_INPUT = getNode("#password_first");
+const  LOGIN_BUTTON = getNode("#logInButton");
+const  SIGNIN_BUTTON = getNode("#signInButton");
 
 /**************************
  * On page load events
  **************************/
 
 // Connection to start html page server source
-var SERVER_URL = window.location.hostname;
-var socket = io.connect(SERVER_URL);
+const SERVER_URL = window.location.hostname;
+const socket = io.connect(SERVER_URL);
 
 /**************************
  * From server side events
  **************************/
 
 // Fires to show server message
-socket.on("alert", function(msg) {
+socket.on("alert", (msg) => {
   alert(msg);
 });
 
 // Fires to clear the login form
-socket.on("clean-form", function() {
+socket.on("clean-form", () => {
   USER_EMAIL_INPUT.value = "";
   FPASS_INPUT.value = "";
 });
 
 // Switches user to new destination page
-socket.on("redirect", function(destination) {
+socket.on("redirect", (destination) => {
   USER_EMAIL_INPUT.value = "";
   FPASS_INPUT.value = "";
 
   //It was impossible to save whole profile object in sessionStorage
-  var signIn_obj = socket.profile.user_email;
+  const signIn_obj = socket.profile.user_email;
+
   sessionStorage.setItem("ss_user_profile", signIn_obj);
 
   window.location.href = destination;
@@ -53,12 +54,12 @@ socket.on("redirect", function(destination) {
  **************************/
 
 // Initiates login data sending to server on submit button
-LOGIN_BUTTON.addEventListener('click', function(event) {
+LOGIN_BUTTON.addEventListener('click', (event) => {
   // Variables to send to the server
-  var user_email = USER_EMAIL_INPUT.value,
-    fpass = FPASS_INPUT.value;
+  const user_email = USER_EMAIL_INPUT.value;
+  const  fpass = FPASS_INPUT.value;
 
-  var logIn_obj = {
+  const logIn_obj = {
     user_email: user_email,
     fpass: fpass
   };
@@ -74,7 +75,7 @@ LOGIN_BUTTON.addEventListener('click', function(event) {
 });
 
 // Initiates signin page loading on button click
-SIGNIN_BUTTON.addEventListener("click", function() {
+SIGNIN_BUTTON.addEventListener("click", () => {
   USER_EMAIL_INPUT.value = "";
   FPASS_INPUT.value = "";
 

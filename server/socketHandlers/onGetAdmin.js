@@ -9,7 +9,7 @@ const DEFAULT_TEMPLATE_TEXT = "Hello, {{userName}}!";
  * The main admin content is users list and email template
  * text
  *
- * Result - admin page content obj is sended to admin socket
+ * Result - Admin page content obj is sended to admin socket
  *
  * @param {string} ss_user_email - User login (email)
  */

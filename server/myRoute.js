@@ -58,25 +58,25 @@ export const serverRoutes = [
     method: "GET",
     path: "/logIn.js",
     handler: {
-      file: __dirname + "./../client/logIn.js"
+      file: __dirname + "./client/logIn.js"
     }
   }, {
     method: "GET",
     path: "/signIn.js",
     handler: {
-      file: __dirname + "./../client/signIn.js"
+      file: __dirname + "./client/signIn.js"
     }
   }, {
     method: "GET",
     path: "/userProfile.js",
     handler: {
-      file: __dirname + "./../client/userProfile.js"
+      file: __dirname + "./client/userProfile.js"
     }
   }, {
     method: "GET",
     path: "/adminProfile.js",
     handler: {
-      file: __dirname + "./../client/adminProfile.js"
+      file: __dirname + "./client/adminProfile.js"
     }
   }, {
     method: "GET",

@@ -1,6 +1,6 @@
-/** ======================
+/**************************
  * Get page fields
- * =======================*/
+ **************************/
 // selector function
 var getNode = function(s) {
   return document.querySelector(s);
@@ -11,9 +11,9 @@ var PASSWORD_INPUT = getNode('#passwordInput');
 var PROFILE_INPUT = getNode('#profileInput');
 var CHANGE_BUTTON = getNode('#changeButton');
 
-/** ======================
+/**************************
  * On page load events
- * =======================*/
+ **************************/
 
 // Connection to start html page server source
 var SERVER_URL = window.location.hostname;
@@ -22,9 +22,9 @@ var socket = io.connect (SERVER_URL);
 var ss_user_email = sessionStorage.getItem('ss_user_profile');
 socket.emit('getProfile', ss_user_email);
 
-/** ======================
+/**************************
  * From server side events
- * =======================*/
+ **************************/
 
 // Fills page fields by server's data
 socket.on("setProfile", function(profile){
@@ -42,9 +42,9 @@ socket.on('alert', function(msg){
   alert(msg);
 });
 
-/** ======================
+/**************************
  * Page side events
- * =======================*/
+ **************************/
 
 // Initiates user message sending on Enter key due to input focus
 PASSWORD_INPUT.addEventListener ("keypress", changeProfile);
@@ -74,9 +74,9 @@ CHANGE_BUTTON.addEventListener('click', function(event){
 });
 
 
-/** ======================
+/**************************
  * Declarations
- * =======================*/
+ **************************/
 
 function changeProfile(event) {
   var ENTER_KEY = 13;

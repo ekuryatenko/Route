@@ -4,7 +4,7 @@ import emailHelper from "./../helpers/sendgridHelper";
 /**
  * Fires when admin click "Send to all users" button
  *
- * Result - user is been moving to user profile page
+ * Result - ser is been moving to user profile page
  */
 export function onSendToAll() {
   dbHelper.getMainText(null, "1", mainText => {

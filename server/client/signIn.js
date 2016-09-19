@@ -1,6 +1,6 @@
-/** ======================
+/**************************
  * Get page fields
- * =======================*/
+ **************************/
 
 // Selector function
 var getNode = function(s) {
@@ -12,17 +12,17 @@ var user_email_input = getNode('#user_email_input'),
   fpass_input = getNode('#password_first'),
   cpass_input = getNode('#password_confirm');
 
-/** ======================
+/**************************
  * On page load events
- * =======================*/
+ **************************/
 
 // Connection to start html page server source
 var SERVER_URL = window.location.hostname;
 var socket = io.connect (SERVER_URL);
 
-/** ======================
+/**************************
  * From server side events
- * =======================*/
+ **************************/
 
 // alert error messages returned from the server
 socket.on('alert', function(msg){
@@ -47,9 +47,9 @@ socket.on('redirect', function(destination) {
 });
 
 
-/** ======================
+/**************************
  * Page events
- * =======================*/
+ **************************/
 
 // add the event listener for the login submit button
 submit_button.addEventListener('click', function(event){
