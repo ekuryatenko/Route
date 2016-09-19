@@ -26,19 +26,19 @@ const socket = io.connect(SERVER_URL);
  **************************/
 
 // Fires to show server message
-socket.on("alert", function(msg) {
+socket.on("alert", (msg) => {
   alert(msg);
 });
 
 // Fires to clean the login form
-socket.on("clean-form", function() {
+socket.on("clean-form", () => {
   USER_EMAIL_INPUT.value = "";
   FPASS_INPUT.value = "";
   CPASS_INPUT.value = "";
 });
 
 // Switches user to new destination page
-socket.on("redirect", function(destination) {
+socket.on("redirect", (destination) => {
   USER_EMAIL_INPUT.value = "";
   FPASS_INPUT.value = "";
   CPASS_INPUT.value = "";
@@ -56,7 +56,7 @@ socket.on("redirect", function(destination) {
  **************************/
 
 // Initiates signin server process
-SIGNIN_BUTTON.addEventListener("click", function(event) {
+SIGNIN_BUTTON.addEventListener("click", (event) => {
   const user_email = USER_EMAIL_INPUT.value;
   const fpass = FPASS_INPUT.value;
   const cpass = CPASS_INPUT.value;

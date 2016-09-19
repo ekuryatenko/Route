@@ -57,7 +57,7 @@ socket.on("setAdmin", (pageContent) => {
 // Shows changes on text template field
 TEMPLATE_TEXT_FIELD.addEventListener("input", changeBorder);
 
-// Asks server to modify main template text
+// Sends to server modificated template text
 CHANGE_BUTTON.addEventListener("click", () => {
   const newText = TEMPLATE_TEXT_FIELD.value;
 
