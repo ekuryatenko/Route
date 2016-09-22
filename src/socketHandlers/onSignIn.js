@@ -41,7 +41,7 @@ export function onSignIn(newProfile) {
 
       socket.profile = profile;
 
-      dbHelper.addUserToBase(null, profile, () => {
+      dbHelper.addUserToBase(profile).then(() => {
         socket.emit('alert', 'Your account has been created');
         socket.emit('clean-form');
         socket.emit('redirect', USER_PROFILE_PAGE);

@@ -18,17 +18,21 @@ export function onGetAdmin(ss_user_email) {
 
   let adminPageContent = {};
 
-  dbHelper.getAllUsers(null, (users) => {
-    dbHelper.getMainText(null, "1", (text) =>{
-      adminPageContent.usersList = users;
-
-      if(text){
-        adminPageContent.templateText = text;
-      }else{
-        adminPageContent.templateText = DEFAULT_TEMPLATE_TEXT;
-      }
-
-      socket.emit('setAdmin', adminPageContent);
+  dbHelper.getAllUsers()
+    .then((users) => {
+        adminPageContent.usersList = users;
+        return users;
     })
-  });
+    .then((users) => {
+      return dbHelper.getMainText("1");
+    })
+    .then((text) =>{
+        if(text){
+          adminPageContent.templateText = text;
+        }else{
+          adminPageContent.templateText = DEFAULT_TEMPLATE_TEXT;
+        }
+
+        socket.emit('setAdmin', adminPageContent);
+    });
 }

@@ -11,7 +11,7 @@ import dbHelper from "./../helpers/dbHelper";
 export function onGetProfile(ss_user_email) {
   const socket = this;
 
-  dbHelper.getUserProfile(null, ss_user_email, (profile) => {
+  dbHelper.getUserProfile(ss_user_email).then((profile) => {
     socket.emit('setProfile', profile);
   });
 }

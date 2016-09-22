@@ -23,38 +23,39 @@ export function onLogIn(login_info) {
   if (this_user_email === "" || this_user_password === "") {
     socket.emit("alert", "You must fill in both fields");
   } else {
-    dbHelper.getAllUsers(null, users => {
-      // "User has found" flag
-      let found = false;
+    dbHelper.getAllUsers().then(
+        users => {
+          // "User has found" flag
+          let found = false;
 
-      if (users.length) {
-        users.forEach(user => {
-          if (user.user_email === this_user_email) {
-            found = true;
+          if (users.length) {
+            users.forEach(user => {
+              if (user.user_email === this_user_email) {
+                found = true;
 
-            if (user.password === this_user_password) {
-              socket.emit ("clean-form");
+                if (user.password === this_user_password) {
+                  socket.emit ("clean-form");
 
-              if (this_user_email.toLowerCase() != "admin") {
-                socket.emit ("redirect", USER_PROFILE_PAGE);
-              }else{
-                socket.emit ("redirect", ADMIN_PAGE);
+                  if (this_user_email.toLowerCase() != "admin") {
+                    socket.emit ("redirect", USER_PROFILE_PAGE);
+                  }else{
+                    socket.emit ("redirect", ADMIN_PAGE);
+                  }
+
+                } else {
+                  socket.emit("alert", "Please retry password input");
+                }
+
+                return 0;
               }
+            });
 
-            } else {
-              socket.emit("alert", "Please retry password input");
+            if (!found) {
+              socket.emit("clean-form");
+              socket.emit("alert", "Sorry, we could not find you. Please sign up.");
+              socket.emit("redirect", SIGN_IN_PAGE);
             }
-
-            return 0;
           }
-        });
-
-        if (!found) {
-          socket.emit("clean-form");
-          socket.emit("alert", "Sorry, we could not find you. Please sign up.");
-          socket.emit("redirect", SIGN_IN_PAGE);
-        }
-      }
     });
   }
 }
