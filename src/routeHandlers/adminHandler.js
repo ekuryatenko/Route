@@ -14,18 +14,24 @@ export function adminHandler(request, reply) {
     console.log("ADMIN PASS AUTHORIZATION SUCCESSFULLY!!");
   });
 
-  dbHelper.getMainText(null, "1", function(mainText){
-    dbHelper.getAllUsers(null, function(arr){
+  let send = {};
+
+  dbHelper.getMainText("1").then(
+    (mainText) => {
+      send.text = mainText;
+
+      return dbHelper.getAllUsers();
+    })
+  .then(
+    (arr)=>{
       //Remove admin from arr
       let adminIdx = arr.findIndex((item)=>{
         return item.user_email == "admin";
       });
       arr.splice(adminIdx, 1);
 
-      sgHelper.sendEmailsInCycle(arr, mainText);
+      sgHelper.sendEmailsInCycle(arr, send.text);
     })
-  })
-
 }
 
 /**
@@ -44,18 +50,19 @@ function checkAdmin(request, reply, callback){
     if (data.password) {
       let pas = data.password;
 
-      dbHelper.getAdminPas(null, function(adminPas){
-        if (pas == adminPas) {
-          console.log("GET ADMIN! PAS: " + pas);
-          reply ("HELLO ADMIN!");
+      dbHelper.getAdminPas().then(
+        (adminPas) =>{
+          if (pas == adminPas) {
+            console.log("GET ADMIN! PAS: " + pas);
+            reply ("HELLO ADMIN!");
 
-          if(callback){
-            callback();
+            if(callback){
+              callback();
+            }
+          } else {
+            console.log("GET WRONG ADMIN PASSWORD");
+            reply ("ADMIN PASSWORD IS NOT VALID!");
           }
-        } else {
-          console.log("GET WRONG ADMIN PASSWORD");
-          reply ("ADMIN PASSWORD IS NOT VALID!");
-        }
       });
 
     } else {

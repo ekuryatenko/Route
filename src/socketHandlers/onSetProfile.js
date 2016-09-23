@@ -5,16 +5,17 @@ import dbHelper from "./../helpers/dbHelper";
  *
  * Result - user profile data has changed, and user get prompt
  *
- * @param {Object} newProfile - New user profile
+ * @param {Object} modificatedProfile - New user profile
  */
-export function onSetProfile(newProfile) {
+export function onSetProfile(modificatedProfile) {
   // With arrows i had undefined instead this, as socket, after transpilling
   const socket = this;
 
-  dbHelper.updateProfile(null, newProfile, (profileFromDB) => {
-    socket.emit('setProfile', profileFromDB);
+  dbHelper.updateProfile(modificatedProfile).then(
+    (profileFromDB) => {
+      socket.emit('setProfile', profileFromDB);
 
-    // Confirm user
-    socket.emit ('alert', 'Profile changed!');
+      // Confirm user
+      socket.emit ('alert', 'Profile changed!');
   });
 }

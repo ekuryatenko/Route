@@ -7,15 +7,23 @@ import emailHelper from "./../helpers/sendgridHelper";
  * Result - ser is been moving to user profile page
  */
 export function onSendToAll() {
-  dbHelper.getMainText(null, "1", mainText => {
-    dbHelper.getAllUsers(null, usersArr => {
-      //Remove admin from arr
-      let adminIdx = usersArr.findIndex((item)=>{
-        return item.user_email == "admin";
-      });
-      usersArr.splice(adminIdx, 1);
+  let send = {};
 
-      emailHelper.sendEmailsInCycle(usersArr, mainText);
+  dbHelper.getMainText("1")
+    .then( mainText => {
+      send.text = mainText;
+
+      return dbHelper.getAllUsers();
+    })
+    .then(
+      usersArr => {
+        //Remove admin from arr
+        let adminIdx = usersArr.findIndex((item)=>{
+          return item.user_email == "admin";
+        });
+
+        usersArr.splice(adminIdx, 1);
+
+        emailHelper.sendEmailsInCycle(usersArr, send.text);
     });
-  });
 }

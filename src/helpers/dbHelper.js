@@ -158,8 +158,11 @@ function getUserProfileFromDb(user, db){
       .next((err, profile) => {
         db.close();
 
-        resolve(profile);
-        reject(err);
+          if(err){reject(err);}
+
+          if(profile){resolve(profile);}
+          else{reject("NO PROFILE")}
+
       });
   });
 }
@@ -170,9 +173,6 @@ function getUserProfile(user){
     .then(
       db => {return getUserProfileFromDb(user, db);}
     )
-    .catch(error => {
-      console.error(error);
-    });
 }
 
 /** ********************************** */
