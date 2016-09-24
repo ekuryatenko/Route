@@ -1,7 +1,7 @@
 import dbHelper from "./../helpers/dbHelper";
 
 /**
- * Fires when admin has submitted new template from admin page
+ * Fires when admin has submitted new text template from admin page
  *
  * Result - new template has saved in db, and admin get prompt
  *

@@ -1,5 +1,9 @@
-const MY_APP_EMAIL = process.env.CLOUDMAILIN_EMAIL;// ????????????
+const MY_APP_EMAIL = process.env.CLOUDMAILIN_EMAIL;
 
+/**
+ * Object helps to handle emails
+ * with CLOUDMAILIN service REST API
+ */
 export default (function(){
   return {
     getIncomingMailAddresses (request){

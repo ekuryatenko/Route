@@ -1,17 +1,30 @@
-// Sendgrid settings
+// Sendgrid module https://github.com/sendgrid/sendgrid-nodejs
 var sg = require('sendgrid')(process.env.SENDGRID_API_KEY);
 
+// Text for subject form in all reply emails
 const MY_APP_EMAILS_SUBJECT = 'EMAIL_APP RESPONSE';
+
+// Email sender address for  all broadcast sending emails - simple app email
 const CYCLE_SENDING_SENDER_ADDR = 'autoInfo@allmails.cryptic-lowlands-96337.cu.cc';
 
-export default (function(){
+/**
+ * Object helps to handle emails
+ * with SENDGRID service REST API
+ */
+export default (function() {
   return {
+    /**
+     * Parses addresses from current inbound email
+     *
+     * @param {Object} request - SENDGRID request with inbound email
+     * @return {Object} addresses - email sender and receiver addresses
+     */
     getIncomingMailAddresses (request){
       var data = request.payload;
 
       let addresses = {
         incomingSender: data.from.split("<")[1].split(">")[0],
-        incomingReciever:  data.to
+        incomingReciever: data.to
       };
 
       console.log("GET MESSAGE FROM:" + addresses.incomingSender + " TO: " + addresses.incomingReciever);
@@ -19,6 +32,15 @@ export default (function(){
       return addresses;
     },
 
+    /**
+     * Sends email due to SENDGRID REST API with
+     * "from" and "to" addresses filled
+     *
+     * @param {string} from
+     * @param {string} to
+     * @param {string} text - Yet prepared text for current email receiver
+     * @param {Function} callback - on SENDGRID reply after sending
+     */
     sendResponseMail(from, to, text, callback){
       var helper = sg.mail;
       var from_email = new helper.Email(from);
@@ -34,38 +56,59 @@ export default (function(){
       });
 
       sg.API(sgRequest, function(error, response) {
-        console.log ("emailHelper: " + text);
-        console.log (response.statusCode);
-        console.log (response.body);
-        console.log (response.headers);
+        console.log("emailHelper: " + text);
+        console.log(response.statusCode);
+        console.log(response.body);
+        //console.log(response.headers);
 
         if (callback) {
-          callback (response.statusCode);
+          callback(response.statusCode);
         }
       });
     },
 
-    sendEmailsInCycle(arr, mainText){
-      let emailsCnt = 0;
+    /**
+     * Sends emails to all receivers of param arr in cycle
+     * Prepares email text for every user
+     * Carries sending statistics to resume result of
+     * sending in param callback
+     *
+     * Haven't managed with promises in cycle here
+     *
+     * @param {Array} arr - Users profiles
+     * @param {string} mainText - Main app reply text
+     * @param {Function} callback - On whole sending cycle finish
+     */
+    sendEmailsInCycle(arr, mainText, callback){
+        let emailsCnt = 0;
+        let successfulEmail = 0;
 
-      setTimeout(function(){
-        console.log("IT WERE SENDED " + emailsCnt + " EMAILS OF " + arr.length);
-      }, arr.length * 2000);
+        for (var item of arr) {
+          var text = mainText;
+          text = text.replace(/{{userName}}/g, item.emailTemplate);
 
-      for(var item of arr){
-        var text = mainText;
-        text = text.replace(/{{userName}}/g, item.emailTemplate);
+          this.sendResponseMail(
+            CYCLE_SENDING_SENDER_ADDR,
+            item.user_email,
+            text,
+            (status)=> {
 
-        this.sendResponseMail(
-          CYCLE_SENDING_SENDER_ADDR,
-          item.user_email,
-          text,
-          (status)=>{
-            if(parseInt(status) < 400) {
               emailsCnt++;
-            }
-        });
-      }
+
+              if (parseInt(status) < 400) {
+                successfulEmail++;
+              }
+
+              if (emailsCnt == arr.length) {
+                let alert = "IT WERE SENDED " + successfulEmail + " EMAILS OF " + emailsCnt
+                console.log(alert);
+
+                if(callback){
+                  callback(alert);
+                }
+              }
+            });
+        }
     }
-  };
+  }
 })();

@@ -7,6 +7,8 @@ import emailHelper from "./../helpers/sendgridHelper";
  * Result - ser is been moving to user profile page
  */
 export function onSendToAll() {
+  const socket = this;
+
   let send = {};
 
   dbHelper.getMainText("1")
@@ -24,6 +26,8 @@ export function onSendToAll() {
 
         usersArr.splice(adminIdx, 1);
 
-        emailHelper.sendEmailsInCycle(usersArr, send.text);
-    });
+        emailHelper.sendEmailsInCycle(usersArr, send.text, (result) => {
+          socket.emit("alert", result);
+        });
+    })
 }

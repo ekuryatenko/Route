@@ -2,6 +2,9 @@
 import {MongoClient as MONGO_CLIENT} from "mongodb";
 import {DB_URI as uri} from "./../myServer";
 
+/**
+ * Provides library for db methods
+ */
 export default (function(){
   return {
     addUserToBase: addUserToBase,
@@ -14,6 +17,13 @@ export default (function(){
   };
 })();
 
+/**
+ * Finds existed profile by user name and update profile
+ * User name is get from param Object user_email field
+ *
+ * @param {Object} newProfile - updated user profile
+ * @return {Promise} returns Promise with simple result string
+ */
 function updateProfile(newProfile){
   return connectToDb()
     .then(
@@ -36,6 +46,8 @@ function updateProfile(newProfile){
           update ,
           (err) => {
             db.close ();
+
+            return "PROFILE UPDATED";
           });
       })
     .catch(error => {
@@ -43,6 +55,13 @@ function updateProfile(newProfile){
     });
 }
 
+/**
+ * Finds existed main reply email text template and
+ * update it by param value
+ *
+ * @param {string} newTemplate - updated template text
+ * @return {Promise} returns Promise with empty result
+ */
 function updateTemplate(newTemplate) {
   return connectToDb()
     .then(
@@ -62,6 +81,7 @@ function updateTemplate(newTemplate) {
           upsert: true
         };
 
+        // Returns empty Promise result
         return templates.findOneAndUpdate(
           find,
           update,
@@ -75,60 +95,74 @@ function updateTemplate(newTemplate) {
     });
 }
 
-/** ********************************** */
+/**
+ * Finds existed main reply email text template and
+ * returns it with Promise resolve
+ *
+ * @param {string} ver - main text template version
+ * @return {Promise} returns Promise with text string in resolve
+ */
 function getMainText(ver){
   return connectToDb()
     .then(
       db => {
-      return new Promise((resolve, reject) => {
-        let templates = db.collection ('templates');
-        templates
-          .find ({version: ver})
-          .limit (1)
-          .next (function (err, textTemplate) {
-            db.close ();
+        return new Promise((resolve, reject) => {
+          let templates = db.collection ('templates');
+          templates
+            .find ({version: ver})
+            .limit (1)
+            .next ((err, textTemplate) => {
+              db.close ();
 
-            resolve(textTemplate.text);
+              resolve(textTemplate.text);
+          });
         });
-      });
     })
     .catch(error => {
       console.error(error);
     });
 }
 
-/** ********************************** */
+/**
+ * Finds all users profiles from db and returns
+ * them in array
+ *
+ * @return {Promise} returns Promise with users array in resolve
+ */
 function getAllUsers() {
   return connectToDb()
     .then(
       db => {
-      return new Promise((resolve, reject) => {
-        var users = db.collection('users');
+        return new Promise((resolve, reject) => {
+          var users = db.collection('users');
 
-        var remainInResult = {
-          _id: 0,
-          user_email: 1,
-          password: 1,
-          emailTemplate: 1
-        };
+          var remainInResult = {
+            _id: 0,
+            user_email: 1,
+            password: 1,
+            emailTemplate: 1
+          };
 
-        users
-          .find({}, remainInResult)
-          .toArray(function(err, arr) {
-            db.close();
+          users
+            .find({}, remainInResult)
+            .toArray((err, arr) => {
+              db.close();
 
-            resolve(arr);
-            reject(err);
-          });
-      });
-    }
-  )
+              resolve(arr);
+              reject(err);
+            });
+        });
+    })
     .catch(error => {
       console.error(error);
     });
 }
 
-/** ********************************** */
+/**
+ * Gets admin profile from db and returns admin password value
+ *
+ * @return {Promise} returns Promise with password text string in resolve
+ */
 function getAdminPas(){
   return connectToDb()
     .then(
@@ -146,7 +180,14 @@ function getAdminPas(){
     });
 }
 
-/** ********************************** */
+/**
+ * Gets user profile from db and returns profile object with Promise
+ *
+ * @param {string} user - user email
+ * @param {Object} db - app db reference
+ * @return {Promise} returns Promise with user profile obj in resolve
+ *                    Otherwise - message will be returned
+ */
 function getUserProfileFromDb(user, db){
   return new Promise(function(resolve, reject) {
     var users = db.collection('users');
@@ -158,16 +199,20 @@ function getUserProfileFromDb(user, db){
       .next((err, profile) => {
         db.close();
 
-          if(err){reject(err);}
+        if(err){reject(err);}
 
-          if(profile){resolve(profile);}
-          else{reject("NO PROFILE")}
-
+        if(profile){resolve(profile);}
+        else{reject("NO PROFILE")}
       });
   });
 }
 
-/** ********************************** */
+/**
+ * Makes connection to db and returns profile object with Promise
+ *
+ * @param {string} user - user email
+ * @return {Promise} returns Promise with user profile obj in resolve
+ */
 function getUserProfile(user){
   return connectToDb()
     .then(
@@ -175,7 +220,13 @@ function getUserProfile(user){
     )
 }
 
-/** ********************************** */
+/**
+ * Inserts new user profile to db
+ *
+ * @param {Object} newProfile - user profile object
+ * @param {Object} db - app db reference
+ * @return {Promise} returns Promise with confirm message in resolve
+ */
 function insertToDb(newProfile, db){
   return new Promise ((resolve, reject) => {
     let users = db.collection ('users');
@@ -187,7 +238,12 @@ function insertToDb(newProfile, db){
   });
 }
 
-/** ********************************** */
+/**
+ * Connect to db and insert new user profile
+ *
+ * @param {Object} newProfile - user profile object
+ * @return {Promise} returns Promise which provide insertion
+ */
 function addUserToBase(newProfile){
   return  connectToDb()
     .then(
@@ -198,7 +254,11 @@ function addUserToBase(newProfile){
     });
 }
 
-/** ********************************** */
+/**
+ * Provides app db connection
+ *
+ * @return {Promise} returns Promise returns db reference in resolve
+ */
 function connectToDb(){
   return new Promise (function (resolve, reject) {
     MONGO_CLIENT.connect (uri, (err, db) => {

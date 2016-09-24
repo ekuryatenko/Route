@@ -10,28 +10,36 @@ import sgHelper from "./../helpers/sendgridHelper";
  * @param {Object} reply
  */
 export function adminHandler(request, reply) {
-  checkAdmin(request, reply, function(){
-    console.log("ADMIN PASS AUTHORIZATION SUCCESSFULLY!!");
-  });
+  let sendOptions = {};
 
-  let send = {};
+  checkAdmin(request, reply)
+  .then(
+    onCorrectPas => {
+      console.log(onCorrectPas);
+      return dbHelper.getMainText("1");
+    },
 
-  dbHelper.getMainText("1").then(
+    onWrongPass => {
+      console.log(onWrongPass);
+    }
+  ).then(
     (mainText) => {
-      send.text = mainText;
+      sendOptions.text = mainText;
 
       return dbHelper.getAllUsers();
-    })
-  .then(
-    (arr)=>{
+    }
+  ).then(
+    (arr)=> {
       //Remove admin from arr
-      let adminIdx = arr.findIndex((item)=>{
+      let adminIdx = arr.findIndex((item)=> {
         return item.user_email == "admin";
       });
       arr.splice(adminIdx, 1);
 
-      sgHelper.sendEmailsInCycle(arr, send.text);
-    })
+      sgHelper.sendEmailsInCycle(arr, sendOptions.text);
+    }
+  );
+
 }
 
 /**
@@ -41,29 +49,28 @@ export function adminHandler(request, reply) {
  *
  * @param {Object} request
  * @param {Object} reply
- * @param {Function} callback
  */
-function checkAdmin(request, reply, callback){
+function checkAdmin(request, reply){
   if (request.payload) {
     let data = request.payload;
 
     if (data.password) {
       let pas = data.password;
 
-      dbHelper.getAdminPas().then(
-        (adminPas) =>{
-          if (pas == adminPas) {
-            console.log("GET ADMIN! PAS: " + pas);
-            reply ("HELLO ADMIN!");
+      return new Promise((resolve, reject) => {
+        dbHelper.getAdminPas().then(
+          (adminPas) => {
+            if (pas == adminPas) {
+              reply("HELLO ADMIN! I START SENDING EMAILS ...");
 
-            if(callback){
-              callback();
+              resolve("ADMIN IS VALID! START SENDING EMAILS ...");
+            } else {
+              reply("ADMIN PASSWORD IS NOT VALID!");
+
+              reject("GET WRONG ADMIN PASSWORD");
             }
-          } else {
-            console.log("GET WRONG ADMIN PASSWORD");
-            reply ("ADMIN PASSWORD IS NOT VALID!");
-          }
-      });
+          });
+      })
 
     } else {
       console.log("NO PASSSWORD IN ADMIN POST!");

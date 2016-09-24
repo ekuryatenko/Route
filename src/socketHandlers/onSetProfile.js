@@ -11,11 +11,17 @@ export function onSetProfile(modificatedProfile) {
   // With arrows i had undefined instead this, as socket, after transpilling
   const socket = this;
 
-  dbHelper.updateProfile(modificatedProfile).then(
+  dbHelper.updateProfile(modificatedProfile)
+    .then(
+      onUpdate => {
+        return dbHelper.getUserProfile(modificatedProfile.user_email);
+      }
+    )
+    .then(
     (profileFromDB) => {
       socket.emit('setProfile', profileFromDB);
 
       // Confirm user
       socket.emit ('alert', 'Profile changed!');
-  });
+    });
 }

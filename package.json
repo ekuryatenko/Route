@@ -5,7 +5,7 @@
   "scripts": {
     "postinstall": "babel src --out-dir lib",
     "compile": "babel src --out-dir lib",
-    "test": "babel app.js --out-dir lib"
+    "test": "babel TEST --out-dir RUN"
   },
   "author": "",
   "license": "ISC",

@@ -28,29 +28,30 @@ export function onSignIn(newProfile) {
     return;
   }
 
-  dbHelper.getAllUsers(null, (dbArr) =>{
-    let found = doesUserExist(newProfile.user_email, dbArr);
+  dbHelper.getAllUsers().then(
+    (dbArr) =>{
+      let found = doesUserExist(newProfile.user_email, dbArr);
 
-    if (found !== "exists") {
-      // if not found, push the user profile into the db
-      let profile = {
-        user_email: user_email,
-        password: cpass,
-        emailTemplate: (user_email.indexOf("@") > -1) ? user_email.substr(0, user_email.indexOf("@")) : user_email
-      };
+      if (found !== "exists") {
+        // if not found, push the user profile into the db
+        let profile = {
+          user_email: user_email,
+          password: cpass,
+          emailTemplate: (user_email.indexOf("@") > -1) ? user_email.substr(0, user_email.indexOf("@")) : user_email
+        };
 
-      socket.profile = profile;
+        socket.profile = profile;
 
-      dbHelper.addUserToBase(profile).then(() => {
-        socket.emit('alert', 'Your account has been created');
+        dbHelper.addUserToBase(profile).then(() => {
+          socket.emit('alert', 'Your account has been created');
+          socket.emit('clean-form');
+          socket.emit('redirect', USER_PROFILE_PAGE);
+          return found;
+        });
+      } else {
         socket.emit('clean-form');
-        socket.emit('redirect', USER_PROFILE_PAGE);
-        return found;
-      });
-    } else {
-      socket.emit('clean-form');
-      socket.emit('alert', 'Username already exists. Please use another one.');
-    }
+        socket.emit('alert', 'Username already exists. Please use another one.');
+      }
   });
 }
 
