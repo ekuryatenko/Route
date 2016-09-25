@@ -6,8 +6,6 @@ import SOCKET_IO from "socket.io";
 
 // DB constant
 const DB_URI = process.env.MONGODB_URI;
-
-// DB constant
 let DB;
 
 // Server initiation logging timeout time, ms
@@ -23,6 +21,7 @@ const initServer = function (listener, callbackAfterServerRunning) {
     if (err) {
       throw new Error (err);
     }
+
     console.log (`SERVER: connected to dataBase  ${db.databaseName}`);
 
     // Global variable for socket.io server
@@ -34,42 +33,58 @@ const initServer = function (listener, callbackAfterServerRunning) {
       socketHandler (socket);
     });
 
-// Wait for server to boot
+    // Wait for server to boot
     setTimeout (() => {
       callbackAfterServerRunning ()
     }, TIME_OUT);
   });
 };
 
+import {onGetProfile} from "./socketHandlers/onGetProfile";
+import {onSignIn} from "./socketHandlers/onSignIn";
+import {onLogIn} from "./socketHandlers/onLogIn";
+import {onSetProfile} from "./socketHandlers/onSetProfile";
+import {onGetAdmin} from "./socketHandlers/onGetAdmin";
+import {onUpdateTemplate} from "./socketHandlers/onUpdateTemplate";
+import {onSendToAll} from "./socketHandlers/onSendToAll";
+import {onRemoveProfile} from "./socketHandlers/onRemoveProfile";
 
-import {onGetProfile} from "./onGetProfile";
-import {onSignIn} from "./onSignIn";
-import {onLogIn} from "./onLogIn";
-import {onSetProfile} from "./onSetProfile";
-import {onGetAdmin} from "./onGetAdmin";
-import {onUpdateTemplate} from "./onUpdateTemplate";
 /**
- * Main handler for chat events
+ * Main socket handler for chat events
  * @param {Object} socket
  */
 function socketHandler (socket) {
-  // User has connected to Route start page
+  /** Log in page events */
+
+  // User has send his data from login page
   socket.on ("logIn", onLogIn);
 
-  // User has connected to Route start page
+  /** Sign in page events */
+
+  // User has send his data from registration page
   socket.on ("signIn", onSignIn);
 
-  // User asks from profile page
+  /** User profile page events */
+
+  // User asks for his personal data to fill forms of profile page
   socket.on ("getProfile", onGetProfile);
 
-  // User changes his profile after authorization
+  // User has changed his personal data from profile page
   socket.on ("setProfile", onSetProfile);
 
-  // User changes his profile after authorization
+  /** Admin page events */
+
+  // Admin asks for admin page content to fill page forms
   socket.on ("getAdmin", onGetAdmin);
 
-  // User changes his profile after authorization
+  // Admin asks to change main email template
   socket.on ("updateTemplate", onUpdateTemplate);
+
+  // Admin asks to make broadcast email delivery
+  socket.on ("sendToAll", onSendToAll);
+
+  // Admin asks to delete user from db
+  socket.on ("removeProfile", onRemoveProfile);
 }
 
 export {

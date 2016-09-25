@@ -1,9 +1,7 @@
-/** ********************************************/
-import {getTamplateSample} from "./pathHandler.js";
-import {incomingMailHandler} from "./incomingMailHandler.js";
-import {adminHandler} from "./adminHandler.js";
+import {getTemplateSample} from "./routeHandlers/pathHandler.js";
+import {incomingMailHandler} from "./routeHandlers/incomingMailHandler.js";
+import {adminHandler} from "./routeHandlers/adminHandler.js";
 
-/** ********************************************/
 // Main routes for app server
 export const serverRoutes = [
   {
@@ -24,37 +22,37 @@ export const serverRoutes = [
     method: "GET",
     path: "/path/{user}",
     handler: function (request, reply) {
-      getTamplateSample(reply, request.params.user);
+      getTemplateSample(reply, request.params.user);
     }
   }, {
     method: "GET",
     path: "/",
     handler: {
-      file: __dirname + "/views/logInForm.html"
+      file: __dirname + "./../views/logInForm.html"
     }
   }, {
     method: "GET",
     path: "/signInForm.html",
     handler: {
-      file: __dirname + "/views/signInForm.html"
+      file: __dirname + "./../views/signInForm.html"
     }
   }, {
     method: "GET",
     path: "/userProfileForm.html",
     handler: {
-      file: __dirname + "/views/userProfileForm.html"
+      file: __dirname + "./../views/userProfileForm.html"
     }
   }, {
     method: "GET",
     path: "/adminProfileForm.html",
     handler: {
-      file: __dirname + "/views/adminProfileForm.html"
+      file: __dirname + "./../views/adminProfileForm.html"
     }
   }, {
     method: "GET",
     path: "/routeStyle.css",
     handler: {
-      file: __dirname + "/views/routeStyle.css"
+      file: __dirname + "./../views/routeStyle.css"
     }
   }, {
     method: "GET",
@@ -84,7 +82,7 @@ export const serverRoutes = [
     method: "GET",
     path: "/socket.io-1.2.0.js",
     handler: {
-      file: __dirname + "/socket/socket.io-1.2.0.js"
+      file: __dirname + "./../socket/socket.io-1.2.0.js"
     }
   }
 ];
