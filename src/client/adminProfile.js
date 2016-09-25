@@ -12,6 +12,7 @@ const BASE_USERS_LIST = getNode("#usersList");
 const TEMPLATE_TEXT_FIELD = getNode("#templateText");
 const CHANGE_BUTTON = getNode("#changeButton");
 const SEND_TO_ALL_BUTTON = getNode("#sendButton");
+const DELETE_USER_SELECT = getNode("#deleteUser");
 
 /**************************
  * On page load events
@@ -41,9 +42,28 @@ socket.on("alert", (msg) => {
 socket.on("setAdmin", (pageContent) => {
   pageContent.usersList.forEach((item) => {
     if (item.user_email.toUpperCase() != "ADMIN") {
-      let newLi = document.createElement("li");
-      newLi.innerHTML = item.user_email + ": " + item.password;
+      const newLi = document.createElement ("li");
+
+      const newA = document.createElement ("a");
+      newA.href = "#";
+      newA.innerHTML = item.user_email + ": " + item.password;
+      newA.name = item.user_email;
+
+      newLi.appendChild(newA);
       BASE_USERS_LIST.appendChild(newLi);
+
+      // Realize user removing
+      newA.addEventListener ("click", () => {
+        if(confirm ("Do you want delete " + newA.name + "?")){
+          let qty = (BASE_USERS_LIST.childNodes.length);
+
+          for (var i = 0; i < qty; i++) {
+            BASE_USERS_LIST.removeChild(BASE_USERS_LIST.firstChild);
+          }
+
+          socket.emit ("removeProfile", newA.name);
+        }
+      });
     }
   });
 

@@ -12,6 +12,7 @@ export default (function(){
     getAllUsers: getAllUsers,
     getMainText: getMainText,
     getUserProfile: getUserProfile,
+    removeFromDb: removeFromDb,
     updateProfile: updateProfile,
     updateTemplate: updateTemplate
   };
@@ -236,6 +237,34 @@ function insertToDb(newProfile, db){
       reject(new Error());
     });
   });
+}
+
+/**
+ * Removes existed user profile from db
+ *
+ * @param {string} user - user email
+ * @return {Promise} returns Promise with confirm message in resolve
+ */
+function removeFromDb(user) {
+  return connectToDb().then(
+      db => {
+      return new Promise((resolve, reject) => {
+        let users = db.collection('users');
+
+        let filter = {
+          'user_email': user
+        };
+
+        users.deleteOne(filter, () => {
+          db.close();
+
+          resolve("USER DELETED");
+        });
+      })
+    })
+    .catch(error => {
+      console.error(error);
+    });
 }
 
 /**

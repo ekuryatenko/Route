@@ -47,6 +47,7 @@ import {onSetProfile} from "./socketHandlers/onSetProfile";
 import {onGetAdmin} from "./socketHandlers/onGetAdmin";
 import {onUpdateTemplate} from "./socketHandlers/onUpdateTemplate";
 import {onSendToAll} from "./socketHandlers/onSendToAll";
+import {onRemoveProfile} from "./socketHandlers/onRemoveProfile";
 
 /**
  * Main socket handler for chat events
@@ -81,6 +82,9 @@ function socketHandler (socket) {
 
   // Admin asks to make broadcast email delivery
   socket.on ("sendToAll", onSendToAll);
+
+  // Admin asks to delete user from db
+  socket.on ("removeProfile", onRemoveProfile);
 }
 
 export {
