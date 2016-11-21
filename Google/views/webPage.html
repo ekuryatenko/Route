@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MyChatUserWindow</title>
+    <link type="text/css" rel="stylesheet" href="myStyle.css" />
+</head>
+
+<body>
+<script src="/nodeTest/node_modules/socket.io-client/socket.io.js"></script>
+
+<div id="wrapper">
+
+
+    <div id="menu">
+        <p id="welcome"><b>Welcome, </b><b id="userName"></b></p>
+        <a id="createRoom" href="#"><b>Create room</b></a>
+    </div>
+
+    <div id="chatbox">
+        <b>userName</b>msg<br>
+        <b>userName</b>msg<br>
+        <b>userName</b>msg<br>
+
+    </div>
+
+    <div id="roomsbox">
+        <p><b>Rooms:</b></p>
+        <ul id="roomsList">
+            <li>QQQQQQ</li>
+            <li>QQQqqqqqqqqqqqqqqqqqqqqQQQ</li>
+        </ul>
+    </div>
+
+    <div id="formBox">
+        <form name="message" action="" onsubmit="return false">
+            <input name="usermsg" type="text" id="usermsg" size="80" />
+            <button id="submitmsg"/>Send</button>
+        </form>
+    </div>
+
+
+</div>
+
+
+<script src="myClient.js"></script>
+
+</body>
+</html>

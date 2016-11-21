@@ -1,0 +1,128 @@
+/* CSS Document */
+body {
+    font:14px arial;
+    color: #222;
+    text-align:center;
+    padding:70px;
+}
+
+p, a, li {
+    margin:0;
+    padding:0;
+    border:1px solid red;
+}
+
+ul {
+    margin:0;
+    padding-left:5px;
+    border:1px solid green;
+}
+
+a {
+    color:#0000FF;
+    text-decoration:none;
+}
+
+/* Will underline href on cursor */
+a:hover {
+    text-decoration:underline;
+}
+
+b {
+    border:1px solid #ACD8F0;
+}
+
+#wrapper {
+    margin:0 auto;
+    margin-bottom:5px;
+    padding-bottom:10px;
+    background:#EBF4FB;
+    width:614px;
+    border:1px solid #ACD8F0;
+    position: relative;
+}
+
+#menu {
+    border:1px solid red;
+    position: relative;
+    display: block;
+    padding:2px 15px 2px 15px;
+    /* was working only with float of childs */
+    overflow:hidden;
+    margin-bottom:5px;
+}
+
+#welcome {
+    /*position: absolute;
+    left: 15px;
+    vertical-align: middle;*/
+    text-align:left;
+
+    /* position: absolute didn't work with overflow  */
+    float: left;
+
+    /*background:#fff;*/
+    /*font-size: 18px;*/
+    width:430px;
+    /*height: auto;*/
+}
+
+#createRoom {
+    /*position: absolute;
+    right: 15px;
+    vertical-align: middle;*/
+
+    float: right;
+
+    /*background:#fff;*/
+    /*font-size: 18px;*/
+}
+
+#chatbox {
+    text-align:left;
+    margin:0 auto;
+    margin-bottom:5px;
+    padding:10px;
+    background:#fff;
+    height:270px;
+    width:430px;
+    border:1px solid #ACD8F0;
+    overflow:auto;
+    display: inline-block;
+}
+
+#roomsbox {
+    text-align:left;
+    margin:0 auto;
+    margin-bottom:5px;
+    padding:10px;
+    background:#fff;
+    height:270px;
+    width:100px;
+    border:1px solid #ACD8F0;
+    overflow:auto;
+    display: inline-block;
+}
+
+/* Div to set form position */
+#formBox {
+    margin:0 auto;
+    display: block;
+    position: relative;
+    text-align:center;
+}
+
+/* Form input field */
+#usermsg {
+    width:450px;
+    border:1px solid #ACD8F0;
+    margin:0 auto;
+    display: inline-block;
+    font:14px arial;
+}
+
+/* Form send button */
+#submitmsg {
+    width: 120px;
+    display: inline-block;
+}
