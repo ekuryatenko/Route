@@ -1,11 +1,22 @@
+"use strict";
+
+/**
+ * TODO: remove "connected to data base" from server
+ * TODO: Save previous field values for case of failed requests
+ *
+ * TODO: comments for each function (params...)
+ * TODO: edit everything due to ES6
+ * TODO: Search Webpack for Promises
+ *
+ * TODO: route sendToAll function from button
+ *
+ * TODO: Use Generators instead of promise...then chains
+ * TODO: Search Webpack for Generators
+ */
+
 /**************************
  * Get page fields
  **************************/
-
-// Returns reference to selector page object
-var getNode = (selector) => {
-  return document.querySelector(selector);
-};
 
 // Get the page nodes
 const BASE_USERS_LIST = getNode("#usersList");
@@ -18,33 +29,56 @@ const DELETE_USER_SELECT = getNode("#deleteUser");
  * On page load events
  **************************/
 
-// Connection to start html page server source
-const SERVER_URL = window.location.hostname;
-const socket = io.connect(SERVER_URL);
-
-// Retrieve user reference from session storage
-const ss_user_email = sessionStorage.getItem("ss_user_profile");
-socket.emit("getAdmin", ss_user_email);
+// Requests server for page data and put them to page nodes
+getPageContentFromServer();
 
 /**************************
- * From server side events
+ * Page nodes events
  **************************/
 
-// Fires to show server message
-socket.on("alert", (msg) => {
-  alert(msg);
+// Shows changes on text template field
+TEMPLATE_TEXT_FIELD.addEventListener("input", makeRedBorder);
 
-  // It was simple to modify text field here
-  TEMPLATE_TEXT_FIELD.style.border = "none";
+// Sends to server modificated template text for saving
+CHANGE_BUTTON.addEventListener("click", sendNewTemplateToServer);
+
+// Initiates emails sending to every user
+SEND_TO_ALL_BUTTON.addEventListener("click", () => {
+  //TODO: ("sendToAll");
 });
 
+/**************************
+ * Declarations
+ **************************/
+
+// Returns reference to selector page object
+function getNode(selector) {
+  return document.querySelector(selector);
+}
+
+function getPageContentFromServer() {
+  httpGet("/getAdminPageContent")
+    .then(
+      response => {
+        let pageContent = JSON.parse(response);
+        setAdminPageContent(pageContent);
+    },
+      error => {
+        //Handle error
+        alert("REJECTED: " + error + " " + error.code);
+    }
+  );
+}
+
 // Initial page data loading
-socket.on("setAdmin", (pageContent) => {
+function setAdminPageContent(pageContent) {
+  TEMPLATE_TEXT_FIELD.value = pageContent.templateText;
+
   pageContent.usersList.forEach((item) => {
     if (item.user_email.toUpperCase() != "ADMIN") {
-      const newLi = document.createElement ("li");
+      const newLi = document.createElement("li");
 
-      const newA = document.createElement ("a");
+      const newA = document.createElement("a");
       newA.href = "#";
       newA.innerHTML = item.user_email + ": " + item.password;
       newA.name = item.user_email;
@@ -53,32 +87,32 @@ socket.on("setAdmin", (pageContent) => {
       BASE_USERS_LIST.appendChild(newLi);
 
       // Realize user removing
-      newA.addEventListener ("click", () => {
-        if(confirm ("Do you want delete " + newA.name + "?")){
+      newA.addEventListener("click", () => {
+        if (confirm("Do you want delete " + newA.name + "?")) {
           let qty = (BASE_USERS_LIST.childNodes.length);
 
           for (var i = 0; i < qty; i++) {
             BASE_USERS_LIST.removeChild(BASE_USERS_LIST.firstChild);
           }
 
-          socket.emit ("removeProfile", newA.name);
+          httpGet("/removeUserProfile/" + encodeURIComponent(newA.name))
+            .then(
+              response => {
+                let newPageContent = JSON.parse(response);
+                setAdminPageContent(newPageContent);
+            },
+              error => {
+                //Handle error
+                alert("REJECTED: " + error + " " + error.code);
+            }
+          );
         }
       });
     }
   });
+}
 
-  TEMPLATE_TEXT_FIELD.value = pageContent.templateText;
-});
-
-/**************************
- * Page side events
- **************************/
-
-// Shows changes on text template field
-TEMPLATE_TEXT_FIELD.addEventListener("input", changeBorder);
-
-// Sends to server modificated template text
-CHANGE_BUTTON.addEventListener("click", () => {
+function sendNewTemplateToServer() {
   const newText = TEMPLATE_TEXT_FIELD.value;
 
   const newTemplate = {
@@ -86,20 +120,73 @@ CHANGE_BUTTON.addEventListener("click", () => {
     text: newText
   };
 
-  socket.emit("updateTemplate", newTemplate);
-});
+  httpPost("/updateAdminTemplate", JSON.stringify(newTemplate))
+    .then(
+      response => {
+        alert("SERVER RESPONSE: " + response);
+        removeBorder(TEMPLATE_TEXT_FIELD);
+    },
+      error => {
+        alert("REJECTED: " + error + " " + error.code);
+    }
+  );
+}
 
-// Initiates emails sending to every user
-SEND_TO_ALL_BUTTON.addEventListener("click", () => {
-  socket.emit("sendToAll");
-});
+function httpGet(url) {
+  return new Promise((resolve, reject) => {
+    var xhr = new XMLHttpRequest();
 
-/**************************
- * Declarations
- **************************/
+    xhr.open("GET", url, true);
 
-function changeBorder() {
+    xhr.onload = function () {
+      if (this.status == 200) {
+        resolve(this.responseText);
+      } else {
+        var error = new Error(this.statusText);
+        error.code = this.status;
+        reject(error);
+      }
+    };
+
+    xhr.onerror = function () {
+      reject(new Error("Network Error"));
+    };
+
+    xhr.send();
+  });
+}
+
+function httpPost(url, stringToPost) {
+  return new Promise((resolve, reject) => {
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", url, true);
+
+    xhr.setRequestHeader("Content-type", "application/json; charset=utf-8");
+
+    xhr.onload = function () {
+      if (this.status == 200) {
+        resolve(this.responseText);
+      } else {
+        var error = new Error(this.statusText);
+        error.code = this.status;
+        reject(error);
+      }
+    };
+
+    xhr.onerror = function () {
+      reject(new Error("Network Error"));
+    };
+
+    xhr.send(stringToPost);
+  });
+}
+
+function makeRedBorder() {
   this.style.border = "5px solid red";
+}
+
+function removeBorder(field) {
+  field.style.border = "none";
 }
 
 

@@ -1,11 +1,8 @@
+"use strict";
+
 /**************************
  * Get page fields
  **************************/
-
-// Returns reference to selector page object
-const getNode = (selector) => {
-  return document.querySelector(selector);
-};
 
 // Get the page nodes
 const USER_LABEL = getNode("#userLabel");
@@ -17,49 +14,70 @@ const CHANGE_BUTTON = getNode("#changeButton");
  * On page load events
  **************************/
 
-// Connection to start html page server source
-const SERVER_URL = window.location.hostname;
-const socket = io.connect (SERVER_URL);
-
-// Retrieve user reference from session storage
-const ss_user_email = sessionStorage.getItem("ss_user_profile");
-socket.emit("getProfile", ss_user_email);
+document.addEventListener("DOMContentLoaded", getProfileData);
 
 /**************************
- * From server side events
- **************************/
-
-// Fires to show server message
-socket.on("alert", (msg) =>{
-  alert(msg);
-});
-
-// Fills page fields by server's data
-socket.on("setProfile", (profile) => {
-  USER_LABEL.innerHTML = profile.user_email;
-  PASSWORD_INPUT.value = profile.password;
-  PROFILE_INPUT.value = profile.emailTemplate;
-
-  // Confirm that fields modification is accepted by server
-  PASSWORD_INPUT.style.border = "none";
-  PROFILE_INPUT.style.border = "none";
-});
-
-/**************************
- * Page side events
+ * Page nodes events
  **************************/
 
 // Initiates user message sending on Enter key due to input focus
-PASSWORD_INPUT.addEventListener ("keypress", changeProfile);
-PROFILE_INPUT.addEventListener ("keypress", changeProfile);
+PASSWORD_INPUT.addEventListener ("keypress", changeProfileOnEnterKey);
+PROFILE_INPUT.addEventListener ("keypress", changeProfileOnEnterKey);
 
 // Point user that he changed field's value
 PASSWORD_INPUT.addEventListener ("input", changeBorder);
 PROFILE_INPUT.addEventListener ("input", changeBorder);
 
 // Sends to server modificated users profile data
-CHANGE_BUTTON.addEventListener("click", (event) => {
-  // Check for empty fields
+CHANGE_BUTTON.addEventListener("click", changeProfileOnServerSide);
+
+/**************************
+ * Declarations
+ **************************/
+
+// Returns reference to selector page object
+function getNode(selector) {
+  return document.querySelector(selector);
+}
+
+function getProfileData() {
+  // Retrieve user reference from session storage
+  const ss_user_email = sessionStorage.getItem("ss_user_profile");
+
+  httpGet("/getUserProfileHandler/" +  encodeURIComponent(ss_user_email))
+    .then(
+      response => {
+      const profile = JSON.parse(response);
+      USER_LABEL.innerHTML = profile.user_email;
+      PASSWORD_INPUT.value = profile.password;
+      PROFILE_INPUT.value = profile.emailTemplate;
+
+      PASSWORD_INPUT.style.border = "none";
+      PROFILE_INPUT.style.border = "none";
+    },
+      error => {
+      //Handle error
+      alert("REJECTED: " + error + " " + error.code);
+    }
+  );
+}
+
+function changeProfileOnServerSide() {
+  sendModifiedProfile()
+    .then(
+      response => {
+        alert("SERVER RESPONSE: " + response);
+        getProfileData();
+    },
+      error => {
+        alert("REJECTED: " + error + " " + error.code);
+    }
+  );
+}
+
+// Sends profile data on pressed Enter key
+function sendModifiedProfile() {
+  // Checks for empty fields
   if (PASSWORD_INPUT.value === "" || PROFILE_INPUT.value === "") {
     alert("Whoops, you missed one!");
     return;
@@ -71,34 +89,63 @@ CHANGE_BUTTON.addEventListener("click", (event) => {
     emailTemplate: PROFILE_INPUT.value
   };
 
-  socket.emit("setProfile", profile_obj);
-});
+  return httpPost("/setUserProfile", JSON.stringify(profile_obj));
+}
 
-
-/**************************
- * Declarations
- **************************/
-
-// Sends profile data on pressed Enter key
-function changeProfile(event) {
+function changeProfileOnEnterKey(event) {
   const ENTER_KEY = 13;
   if (event.keyCode === ENTER_KEY) {
+    changeProfileOnServerSide();
+  }
+}
 
-    // Checks for empty fields
-    if (PASSWORD_INPUT.value === "" || PROFILE_INPUT.value === "") {
-      alert("Whoops, you missed one!");
-      return;
-    }
+function httpGet(url) {
+  return new Promise((resolve, reject) => {
+    var xhr = new XMLHttpRequest();
 
-    const profile_obj = {
-      user_email: USER_LABEL.innerHTML,
-      password: PASSWORD_INPUT.value,
-      emailTemplate: PROFILE_INPUT.value
+    xhr.open("GET", url, true);
+
+    xhr.onload = function () {
+      if (this.status == 200) {
+        resolve(this.responseText);
+      } else {
+        var error = new Error(this.statusText);
+        error.code = this.status;
+        reject(error);
+      }
     };
 
-    // send the values to the server
-    socket.emit("setProfile", profile_obj);
-  }
+    xhr.onerror = function () {
+      reject(new Error("Network Error"));
+    };
+
+    xhr.send();
+  });
+}
+
+function httpPost(url, stringToPost) {
+  return new Promise((resolve, reject) => {
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", url, true);
+
+    xhr.setRequestHeader("Content-type", "application/json; charset=utf-8");
+
+    xhr.onload = function () {
+      if (this.status == 200) {
+        resolve(this.responseText);
+      } else {
+        var error = new Error(this.statusText);
+        error.code = this.status;
+        reject(error);
+      }
+    };
+
+    xhr.onerror = function () {
+      reject(new Error("Network Error"));
+    };
+
+    xhr.send(stringToPost);
+  });
 }
 
 function changeBorder() {

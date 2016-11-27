@@ -5,9 +5,7 @@ import dbHelper from "./../helpers/dbHelper";
  *
  * @param {string} user_email - User email
  */
-export function onRemoveProfile(user_email) {
-  const socket = this;
-
+export function removeUserProfileHandler(reply, user_email) {
   let adminPageContent = {};
 
   dbHelper.removeFromDb(user_email).
@@ -25,8 +23,8 @@ export function onRemoveProfile(user_email) {
       }else{
         adminPageContent.templateText = DEFAULT_TEMPLATE_TEXT;
       }
-
-      socket.emit('setAdmin', adminPageContent);
+      console.log(adminPageContent);
+      reply(JSON.stringify(adminPageContent));
     });
 }
 

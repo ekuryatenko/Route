@@ -168,6 +168,7 @@ function getAdminPas(){
   return connectToDb()
     .then(
       db => {
+        console.log("DB: getUserProfileFromDb");
         return getUserProfileFromDb("admin", db);
       }
     )
@@ -199,11 +200,10 @@ function getUserProfileFromDb(user, db){
       .limit(1)
       .next((err, profile) => {
         db.close();
-
         if(err){reject(err);}
 
         if(profile){resolve(profile);}
-        else{reject("NO PROFILE")}
+        else{reject("NO PROFILE ERROR")}
       });
   });
 }
@@ -217,8 +217,12 @@ function getUserProfileFromDb(user, db){
 function getUserProfile(user){
   return connectToDb()
     .then(
-      db => {return getUserProfileFromDb(user, db);}
+      db => {
+        return getUserProfileFromDb(user, db);}
     )
+    .catch(error => {
+      console.error(error);
+    });
 }
 
 /**
@@ -233,6 +237,7 @@ function insertToDb(newProfile, db){
     let users = db.collection ('users');
     users.insertOne(newProfile, () => {
       db.close ();
+
       resolve("OK");
       reject(new Error());
     });
