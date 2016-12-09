@@ -1,5 +1,5 @@
 {
-  "name": "route",
+  "name": "myNode",
   "version": "1.0.0",
   "main": "./lib/app.js",
   "scripts": {

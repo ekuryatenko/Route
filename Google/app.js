@@ -5,15 +5,23 @@ var Joi = require('joi');
 var Path = require("path");
 var Inert = require("inert");
 var Vision = require("vision");
-
 var sg = require('sendgrid')(process.env.SENDGRID_API_KEY);
 var fs = require('fs');
 var readline = require('readline');
+
+/** GOOGLE LIBRARIES  ***************************/
+// Imports the Gmail client library
 var google = require('googleapis');
 var googleAuth = require('google-auth-library');
+
 // Imports the Google Cloud client library
 var PubSub = require('@google-cloud/pubsub');
+
+// My handler
 var pubSubHelper = require('./pubSub.js');
+
+var AUTH = {};
+/** **********************************************/
 
 var server = new Hapi.Server();
 
@@ -66,6 +74,7 @@ server.start(function (err) {
 });
 
 function gmailAuth() {
+    console.log('GmailAuth running...');
     // If modifying these scopes, delete your previously saved credentials
     // at ~/.credentials/gmail-nodejs-quickstart.json
     var SCOPES = ['https://www.googleapis.com/auth/gmail.readonly'];
@@ -213,25 +222,30 @@ function listHistory(auth) {
 }
 
 function requestGmailWatch(auth) {
+    AUTH = auth;
+
     var gmail = google.gmail('v1');
-    gmail.users.watch({
+
+    var options = {
         auth: auth,
         userId: 'ekuryatenko@gmail.com',
         resource: {
             topicName: "projects/cryptic-lowlands-96337/topics/myTopic",
             labelIds: ["INBOX"]
         }
-    }, function (err, response) {
-        if (err) {
-            console.log('The API returned an error: ' + err);
-            return;
-        }
-        console.log(response);
+    };
 
-        if(typeof pubSubHelper.subscribtionPullConnection != "function"){
-            console.log(typeof pubSubHelper.subscribtionPullConnection);
-        }else{
-            pubSubHelper.subscribtionPullConnection();
-        }
-    });
+    gmail.users.watch(options, handleWatchResponse);
+}
+
+function handleWatchResponse(err, response) {
+    if (err) {
+        console.log('The API returned an error: ' + err);
+        return;
+    }
+
+    console.log('GmailAPI watch() request handling...');
+    console.log(response);
+
+    pubSubHelper.subscribtionPullConnection(AUTH);
 }
