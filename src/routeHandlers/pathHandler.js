@@ -1,5 +1,5 @@
 import {MongoClient as MONGO_CLIENT} from "mongodb";
-import {DB_URI as uri} from "./../myServer";
+const DB_URI = process.env.MONGODB_URI;
 
 /**
  * Service handler for development

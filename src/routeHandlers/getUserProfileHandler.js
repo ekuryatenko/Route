@@ -11,6 +11,7 @@ import dbHelper from "./../helpers/dbHelper";
 export function getUserProfileHandler(reply, user_email) {
   if (user_email) {
     dbHelper.getUserProfile(user_email).then((profile) => {
+      console.log(JSON.stringify(profile));
       reply(JSON.stringify(profile));
     });
   }

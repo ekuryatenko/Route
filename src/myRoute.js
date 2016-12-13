@@ -86,63 +86,63 @@ export const serverRoutes = [
     method: "GET",
     path: "/",
     handler: {
-      file: __dirname + "./../views/logInForm.html"
+      file: __dirname + "./../frontend/logInForm.html"
     }
   },
   {
     method: "GET",
     path: "/logInForm.html",
     handler: {
-      file: __dirname + "./../views/logInForm.html"
+      file: __dirname + "./../frontend/logInForm.html"
     }
   },
   {
     method: "GET",
     path: "/signInForm.html",
     handler: {
-      file: __dirname + "./../views/signInForm.html"
+      file: __dirname + "./../frontend/signInForm.html"
     }
   }, {
     method: "GET",
     path: "/userProfileForm.html",
     handler: {
-      file: __dirname + "./../views/userProfileForm.html"
+      file: __dirname + "./../frontend/userProfileForm.html"
     }
   }, {
     method: "GET",
     path: "/adminProfileForm.html",
     handler: {
-      file: __dirname + "./../views/adminProfileForm.html"
+      file: __dirname + "./../frontend/adminProfileForm.html"
     }
   }, {
     method: "GET",
     path: "/routeStyle.css",
     handler: {
-      file: __dirname + "./../views/routeStyle.css"
+      file: __dirname + "./../frontend/routeStyle.css"
     }
   }, {
     method: "GET",
     path: "/logIn.js",
     handler: {
-      file: __dirname + "/client/logIn.js"
+      file: __dirname + "/public/logIn.js"
     }
   }, {
     method: "GET",
     path: "/signIn.js",
     handler: {
-      file: __dirname + "/client/signIn.js"
+      file: __dirname + "/public/signIn.js"
     }
   }, {
     method: "GET",
     path: "/userProfile.js",
     handler: {
-      file: __dirname + "/client/userProfile.js"
+      file: __dirname + "/public/userProfile.js"
     }
   }, {
     method: "GET",
     path: "/adminProfile.js",
     handler: {
-      file: __dirname + "/client/adminProfile.js"
+      file: __dirname + "/public/adminProfile.js"
     }
   }, {
     method: "GET",

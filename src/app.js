@@ -1,12 +1,11 @@
-import * as Path from "path";
-import * as Hapi from "hapi";
-import * as Inert from "inert";
-import * as Vision from "vision";
-import * as Pug from "pug";
+import * as Path    from "path";
+import * as Hapi    from "hapi";
+import * as Inert   from "inert";
+import * as Vision  from "vision";
+import * as Pug     from "pug";
 import * as HapiXhr from "hapi-xhr";
 
 import {serverRoutes as serverRoutes} from "./myRoute";
-import {initServer as initServer} from "./myServer";
 
 const server = new Hapi.Server ();
 
@@ -35,20 +34,20 @@ server.register (Inert, (err) => {
         html: require('handlebars')
       },
       // Shows server where templates are located in
-      path: __dirname + "./../views"
+      path: __dirname + "./../frontend"
     });
 
 
 
     // Enables Pug
-    /*server.views ({
+    /*server.frontend ({
      // Registers the Pug as responsible for rendering of .pug files
      engines: {
      html: require('handlebars'),
      pug: Pug
      },
      // Shows server where templates are located in
-     path: __dirname + "./../views",
+     path: __dirname + "./../frontend",
      // For correct page rendering: https://github.com/hapijs/vision#jade
      compileOptions: {
      pretty: true
@@ -66,9 +65,7 @@ server.start ((err) => {
     throw err;
   }
 
-  initServer (server.listener, () => {
-    // Callback after my server's running
-    console.log ("SERVER: app running at ", server.info.uri);
-  });
+  // Callback after my server's running
+  console.log ("SERVER: app running at ", server.info.uri);
 });
 

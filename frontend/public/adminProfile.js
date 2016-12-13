@@ -1,29 +1,33 @@
 "use strict";
 
 /**
- * TODO: remove "connected to data base" from server
- * TODO: Save previous field values for case of failed requests
- *
- * TODO: comments for each function (params...)
+ * TODO: sort items in import
  * TODO: edit everything due to ES6
- * TODO: Search Webpack for Promises
- *
  * TODO: route sendToAll function from button
  *
+ * TODO: Search Webpack for Promises
+ * TODO: Save previous field values for case of failed requests
  * TODO: Use Generators instead of promise...then chains
  * TODO: Search Webpack for Generators
  */
+
+import {
+  httpGet,
+  httpPost,
+  getNode,
+  makeRedBorder,
+  removeBorder,
+  handleRequestError
+} from "./clientLib.js";
 
 /**************************
  * Get page fields
  **************************/
 
-// Get the page nodes
-const BASE_USERS_LIST = getNode("#usersList");
+const BASE_USERS_LIST     = getNode("#usersList");
 const TEMPLATE_TEXT_FIELD = getNode("#templateText");
-const CHANGE_BUTTON = getNode("#changeButton");
-const SEND_TO_ALL_BUTTON = getNode("#sendButton");
-const DELETE_USER_SELECT = getNode("#deleteUser");
+const CHANGE_BUTTON       = getNode("#changeButton");
+const SEND_TO_ALL_BUTTON  = getNode("#sendButton");
 
 /**************************
  * On page load events
@@ -51,11 +55,10 @@ SEND_TO_ALL_BUTTON.addEventListener("click", () => {
  * Declarations
  **************************/
 
-// Returns reference to selector page object
-function getNode(selector) {
-  return document.querySelector(selector);
-}
-
+/**
+ * Request page content from server and fills
+ * page fields by obtained data
+ */
 function getPageContentFromServer() {
   httpGet("/getAdminPageContent")
     .then(
@@ -64,13 +67,15 @@ function getPageContentFromServer() {
         setAdminPageContent(pageContent);
     },
       error => {
-        //Handle error
-        alert("REJECTED: " + error + " " + error.code);
+        handleRequestError(error);
     }
   );
 }
 
-// Initial page data loading
+/**
+ * Fills page fields by content data from param
+ * @param {Object} pageContent - Page content from server
+ */
 function setAdminPageContent(pageContent) {
   TEMPLATE_TEXT_FIELD.value = pageContent.templateText;
 
@@ -80,7 +85,7 @@ function setAdminPageContent(pageContent) {
 
       const newA = document.createElement("a");
       newA.href = "#";
-      newA.innerHTML = item.user_email + ": " + item.password;
+      newA.innerHTML = `${item.user_email}: ${item.password}`;
       newA.name = item.user_email;
 
       newLi.appendChild(newA);
@@ -88,22 +93,21 @@ function setAdminPageContent(pageContent) {
 
       // Realize user removing
       newA.addEventListener("click", () => {
-        if (confirm("Do you want delete " + newA.name + "?")) {
+        if (confirm(`DO YOU WANT TO DELETE ${newA.name}?`)) {
           let qty = (BASE_USERS_LIST.childNodes.length);
 
           for (var i = 0; i < qty; i++) {
             BASE_USERS_LIST.removeChild(BASE_USERS_LIST.firstChild);
           }
 
-          httpGet("/removeUserProfile/" + encodeURIComponent(newA.name))
+          httpGet(`/removeUserProfile/${encodeURIComponent(newA.name)}`)
             .then(
               response => {
                 let newPageContent = JSON.parse(response);
                 setAdminPageContent(newPageContent);
             },
               error => {
-                //Handle error
-                alert("REJECTED: " + error + " " + error.code);
+                handleRequestError(error);
             }
           );
         }
@@ -112,6 +116,9 @@ function setAdminPageContent(pageContent) {
   });
 }
 
+/**
+ * Sends template text to server
+ */
 function sendNewTemplateToServer() {
   const newText = TEMPLATE_TEXT_FIELD.value;
 
@@ -123,70 +130,11 @@ function sendNewTemplateToServer() {
   httpPost("/updateAdminTemplate", JSON.stringify(newTemplate))
     .then(
       response => {
-        alert("SERVER RESPONSE: " + response);
+        alert(`SERVER RESPONSE: ${response}`);
         removeBorder(TEMPLATE_TEXT_FIELD);
     },
       error => {
-        alert("REJECTED: " + error + " " + error.code);
+        handleRequestError(error);
     }
   );
 }
-
-function httpGet(url) {
-  return new Promise((resolve, reject) => {
-    var xhr = new XMLHttpRequest();
-
-    xhr.open("GET", url, true);
-
-    xhr.onload = function () {
-      if (this.status == 200) {
-        resolve(this.responseText);
-      } else {
-        var error = new Error(this.statusText);
-        error.code = this.status;
-        reject(error);
-      }
-    };
-
-    xhr.onerror = function () {
-      reject(new Error("Network Error"));
-    };
-
-    xhr.send();
-  });
-}
-
-function httpPost(url, stringToPost) {
-  return new Promise((resolve, reject) => {
-    var xhr = new XMLHttpRequest();
-    xhr.open("POST", url, true);
-
-    xhr.setRequestHeader("Content-type", "application/json; charset=utf-8");
-
-    xhr.onload = function () {
-      if (this.status == 200) {
-        resolve(this.responseText);
-      } else {
-        var error = new Error(this.statusText);
-        error.code = this.status;
-        reject(error);
-      }
-    };
-
-    xhr.onerror = function () {
-      reject(new Error("Network Error"));
-    };
-
-    xhr.send(stringToPost);
-  });
-}
-
-function makeRedBorder() {
-  this.style.border = "5px solid red";
-}
-
-function removeBorder(field) {
-  field.style.border = "none";
-}
-
-
