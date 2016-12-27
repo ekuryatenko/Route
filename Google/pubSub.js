@@ -22,7 +22,7 @@ module.exports = function () {
             var PubSub = require('@google-cloud/pubsub');
 
             // Your Google Cloud Platform project ID
-            var projectId = '941155794978';
+            var projectId = '257651999562';
 
             // Instantiates a client
             var pubsubClient = PubSub({
@@ -30,7 +30,7 @@ module.exports = function () {
             });
 
             var topic = pubsubClient.topic('myTopic');
-            var subscription = topic.subscription('MySub2');
+            var subscription = topic.subscription('MySub');
 
             // Register an error handler.
             subscription.on('error', function (err) {
@@ -48,7 +48,11 @@ module.exports = function () {
 
                 // Ack the message:
                 message.ack(function () {
-                    printMessage(auth, message);
+                    if(message.data.emailAddress){
+                        printEmail(auth, message);
+                    }else{
+                        console.log("PUBSUB GET MSG: ", message.data);
+                    }
                 });
 
                 // Skip the message. This is useful with `maxInProgress` option when
@@ -61,11 +65,8 @@ module.exports = function () {
         }
     };
 
-    function printMessage(auth, message){
-        if(typeof message == "string"){
-            console.log("PUBSUB MESSAGE: ", message.data);
-        }else{
-            console.log("PUBSUB GET EMAIL: ", message.data);
+    function printEmail(auth, message){
+            //console.log("PUBSUB GET EMAIL: ", message.data);
 
             var emailHistoryId = message.data.historyId;
 
@@ -82,11 +83,11 @@ module.exports = function () {
                 }
 
                 var arr = (response.history);
-                console.log(arr);
+                //console.log(arr);
                 for(var item of arr) {
                     var arr2 = item.messages;
                     for(var item2 of arr2) {
-                        console.log(item2);
+                        //console.log(item2);
 
                         gmail.users.messages.get({
                             auth: auth,
@@ -110,8 +111,6 @@ module.exports = function () {
             });
             /** GMAIL REQUEST******************************** */
         }
-    }
-
 }();
 
 
