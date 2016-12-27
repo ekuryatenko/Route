@@ -228,9 +228,9 @@ function requestGmailWatch(auth) {
 
     var options = {
         auth: auth,
-        userId: 'ekuryatenko@gmail.com',
+        userId: 'crypticlowlands@gmail.com',
         resource: {
-            topicName: "projects/cryptic-lowlands-96337/topics/myTopic",
+            topicName: "projects/cryptic-lowlands-2/topics/myTopic2",
             labelIds: ["INBOX"]
         }
     };
@@ -247,5 +247,5 @@ function handleWatchResponse(err, response) {
     console.log('GmailAPI watch() request handling...');
     console.log(response);
 
-    pubSubHelper.subscribtionPullConnection(AUTH);
+    pubSubHelper.subscribtionPullConnection(AUTH, response.historyId);
 }

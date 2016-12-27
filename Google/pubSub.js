@@ -17,7 +17,7 @@ module.exports = function () {
             console.log("****************************");
         },
 
-        subscribtionPullConnection: function (auth) {
+        subscribtionPullConnection: function (auth, LAST_HISTORY_ID) {
             // Imports the Google Cloud client library
             var PubSub = require('@google-cloud/pubsub');
 
@@ -29,8 +29,8 @@ module.exports = function () {
                 projectId: projectId
             });
 
-            var topic = pubsubClient.topic('myTopic');
-            var subscription = topic.subscription('MySub');
+            var topic = pubsubClient.topic('myTopic2');
+            var subscription = topic.subscription('MySub2');
 
             // Register an error handler.
             subscription.on('error', function (err) {
@@ -49,7 +49,7 @@ module.exports = function () {
                 // Ack the message:
                 message.ack(function () {
                     if(message.data.emailAddress){
-                        printEmail(auth, message);
+                        printEmail(auth, message, LAST_HISTORY_ID);
                     }else{
                         console.log("PUBSUB GET MSG: ", message.data);
                     }
@@ -65,34 +65,39 @@ module.exports = function () {
         }
     };
 
-    function printEmail(auth, message){
-            //console.log("PUBSUB GET EMAIL: ", message.data);
+    function printEmail(auth, message, LAST_HISTORY_ID){
+            console.log("PUBSUB GET EMAIL: ", message.data);
 
-            var emailHistoryId = message.data.historyId;
+            // GET valid historyId: http://stackoverflow.com/questions/32248048/gmail-history-list-is-not-giving-complete-data
+            //var emailHistoryId = message.data.historyId;
 
             var gmail = google.gmail('v1');
             /** GMAIL REQUEST******************************** */
             gmail.users.history.list({
                 auth: auth,
                 userId: 'me',
-                startHistoryId: emailHistoryId
+                startHistoryId: LAST_HISTORY_ID
             }, function (err, response) {
                 if (err) {
                     console.log('The API returned an error: ' + err);
                     return;
                 }
 
-                var arr = (response.history);
-                //console.log(arr);
-                for(var item of arr) {
-                    var arr2 = item.messages;
-                    for(var item2 of arr2) {
-                        //console.log(item2);
+                var historyArr = response.history;
+                LAST_HISTORY_ID = response.historyId;
 
-                        gmail.users.messages.get({
+                //console.log(historyArr);
+
+                var lastHistory = historyArr[historyArr.length-1];
+                var msgs = lastHistory.messages;
+                var lastMsg = msgs[msgs.length-1];
+
+                //console.log(msgs[msgs.length-1]);
+
+                       gmail.users.messages.get({
                             auth: auth,
                             userId: 'me',
-                            id: item2.id
+                            id: lastMsg.id
                         }, function (err, response) {
                             if (err) {
                                 console.log('The API returned an error: ' + err);
@@ -100,14 +105,13 @@ module.exports = function () {
                             }
 
                             var headersArr = response.payload.headers;
+
                             for(var item3 of headersArr) {
                                 if(item3.name == "From")
                                 console.log(item3.value);
                             }
 
                         })
-                    }
-                }
             });
             /** GMAIL REQUEST******************************** */
         }
