@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "cryptic-lowlands-2",
+  "private_key_id": "22abe6ce90359cb56dcc617314c6e8aa10f7485e",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDY9OlkLxlbV0+3\nOrrae7EPEpZRrKiugF/MDuAnz7aQNQo8uiAelX6kwEiTK0ifNDVyEWoOwdAp3ual\nFG3SZBd2zwH9IPTvCKRCC8X70gQNyKR7ILLRwy0ccA7txNP+Ab8YbZxkJv+0RYIU\n8hVRBFITuJNkCt/OilcNhg7QaB+Cwdlw4Dyt2Rttkwhl8YPTxn9TegyRYG+6HCy6\n07x4nsXbQLaBWjOHIkcXiWv82EiVHo4j25pK4XkhdYBc1ejw9eXnD1fzGJm5izAq\nPDsdknO4FVcKsj4gL0JSiFkeClgdkXHK1WiSYosNZ3P/hpn25YOtbCsuH9cwdZY5\nh0QBB/R7AgMBAAECggEAFoVd0NN+y1eF49xJ1zIt0AW66uGEZRDYYONOa3OJXPDU\njjc37FTSX6HCJtzAXh5aSev62WtPA3mq8YnsWIGhWejlKPSJ2GJKQrzcIWbMmu2v\n/UQIq/OZtDEBq7bZ1q0xvARszoyp0HnCpg/3HIDZUEjBrAng75y2qqW21fVpB/aM\nZ93gCjXqBgFhIc0SJ6rJUqfUIeZLYiOtN2DfnnPlbDVeaBjg2JV1Gww+3VcVpt1S\n57KnH6B4pysxmpywHtQBb1Wvb2ZjkcaNqYZlINNcCEuBzXWwXIy9OQb1089WfUUE\n1SstAYq6g/JoWPKzs/DluKrAB2+GeP3Y50+HNtXx4QKBgQD7JmzfdPBE/foN6QJM\nBlUXMTNRPtr92QqWhrqMvz3t1QtecVGNVVDirR+TPLUz4A4EWQEbcdeIk7+xCQTk\nA5s4eZ1/X0/CMUKHt26WRqJjOicDwjXCD96zS4mda8T4RKRdHgshAh2yMZAPg9wz\na3zfN89urQvaslJM7GTKU643EQKBgQDdJXMHa/AqsYxxPjJj1wp846dMqVGUVRTF\nnaX/69JESHvD2zo/jxeo9ZhmGyrB/1kZM4U7SmWicj7n+4/kGA9ed0yjXVcCzRr1\nSXH9OalmVwnUW1u3GNC8kagJwCaBlDs8QVE3PhgQkGUsSZPfgJYTOOWGbBjYFank\n+PoKWkGqywKBgFBz9Lh4e2d+fJXsKKI1/Rga2LeUDQ74ch3aNvRTZwFDGAs+/cLq\nq6iRkOXXsqxVf+gAowwpocPMoMGThA+O4DBtNPjSjXhF02wqZLCbG/XxcQIROqtZ\n7hs9fW4CUey+AHEb6LDAPscQfXea4/VM34maFUb9BCkgqqCdsYPm3o4hAoGANz+k\n5kTEIpZq5NvKEQFnYF4rrM5cUDeVUe2ZzD8pL9//86VwfvKL0a1R3qiI3SCjLNWf\nQnnKvHPYXXKOt0h/hnU9k069bzi4tHEd5kqilKvIC+KrHio38/Rby9vSgur6hYo3\n9RoxPuokLJVROTRRygmb5iJZbpqy8D53kWCNKVMCgYEAhnYLSJwme42k6QFGNh5e\n3EdrjY30ZFP5fNw4fL65MXc6fL2yI2ty2Q9y7I5SArkxlVa6JIoy+IuUc6AkXAII\n/9GO1kdbnTCGvhJEhaJjxE6/xGHY8VEUa4HqKkaSTFhwaethIF0GneKXyO7x7K/L\nAJHGjL9CCGkOgqkfIBSRx48=\n-----END PRIVATE KEY-----\n",
+  "client_email": "work-992@cryptic-lowlands-2.iam.gserviceaccount.com",
+  "client_id": "113330094721465970919",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://accounts.google.com/o/oauth2/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/work-992%40cryptic-lowlands-2.iam.gserviceaccount.com"
+}

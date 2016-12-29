@@ -1,11 +1,8 @@
 'use strict';
 
 var Hapi = require('hapi');
-var Joi = require('joi');
-var Path = require("path");
 var Inert = require("inert");
 var Vision = require("vision");
-var sg = require('sendgrid')(process.env.SENDGRID_API_KEY);
 var fs = require('fs');
 var readline = require('readline');
 
@@ -70,7 +67,7 @@ server.start(function (err) {
     }
     console.log('Server running at:', server.info.uri);
 
-    gmailAuth();
+    defaultAuth();
 });
 
 function gmailAuth() {
@@ -248,4 +245,42 @@ function handleWatchResponse(err, response) {
     console.log(response);
 
     pubSubHelper.subscribtionPullConnection(AUTH, response.historyId);
+}
+
+
+function defaultAuth() {
+    // This method looks for the GCLOUD_PROJECT and GOOGLE_APPLICATION_CREDENTIALS
+    // environment variables.
+    google.auth.getApplicationDefault(function (err, authClient, projectId) {
+        if (err) {
+            throw err;
+        }
+
+        // The createScopedRequired method returns true when running on GAE or a local developer
+        // machine. In that case, the desired scopes must be passed in manually. When the code is
+        // running in GCE or a Managed VM, the scopes are pulled from the GCE metadata server.
+        // See https://cloud.google.com/compute/docs/authentication for more information.
+        if (authClient.createScopedRequired && authClient.createScopedRequired()) {
+            // Scopes can be specified either as an array or as a single, space-delimited string.
+            authClient = authClient.createScoped([
+                'https://www.googleapis.com/auth/compute'
+            ]);
+        }
+
+        // Fetch the list of GCE zones within a project.
+        // NOTE: You must fill in your valid project ID before running this sample!
+        var compute = google.compute({
+            version: 'v1',
+            auth: authClient
+        });
+        var projectId = '257651999562';
+
+        //https://cloud.google.com/compute/docs/regions-zones/regions-zones#zone_deprecation
+        compute.zones.list({
+            project: projectId,
+            auth: authClient
+        }, function (err, result) {
+            console.log(err, result);
+        });
+    });
 }
