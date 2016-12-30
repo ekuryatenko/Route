@@ -67,7 +67,7 @@ server.start(function (err) {
     }
     console.log('Server running at:', server.info.uri);
 
-    defaultAuth();
+    gmailAuth();
 });
 
 function gmailAuth() {
