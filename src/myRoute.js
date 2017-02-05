@@ -1,12 +1,12 @@
-import {getTemplateSample} from "./routeHandlers/pathHandler.js";
-import {incomingMailHandler} from "./routeHandlers/incomingMailHandler.js";
-import {adminHandler} from "./routeHandlers/adminHandler.js";
-import {loginHandler} from "./routeHandlers/loginHandler.js";
-import {signInHandler} from "./routeHandlers/signInHandler.js";
-import {getUserProfileHandler} from "./routeHandlers/getUserProfileHandler.js";
-import {setUserProfileHandler} from "./routeHandlers/setUserProfileHandler.js";
-import {getAdminPageHandler} from "./routeHandlers/getAdminPageHandler.js";
-import {removeUserProfileHandler} from "./routeHandlers/removeUserProfileHandler.js";
+import {getTemplateSample}          from "./routeHandlers/pathHandler.js";
+import {incomingMailHandler}        from "./routeHandlers/incomingMailHandler.js";
+import {adminHandler}               from "./routeHandlers/adminGeneratorHandler.js";
+import {loginHandler}               from "./routeHandlers/loginHandler.js";
+import {signInHandler}              from "./routeHandlers/signInHandler.js";
+import {getUserProfileHandler}      from "./routeHandlers/getUserProfileHandler.js";
+import {setUserProfileHandler}      from "./routeHandlers/setUserProfileHandler.js";
+import {getAdminPageHandler}        from "./routeHandlers/getAdminPageHandler.js";
+import {removeUserProfileHandler}   from "./routeHandlers/removeUserProfileHandler.js";
 import {updateAdminTemplateHandler} from "./routeHandlers/updateAdminTemplateHandler.js";
 
 // Main routes for app server
