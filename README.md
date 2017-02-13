@@ -7,4 +7,5 @@ Simple emailing handler, with users profiles and authorization:
 - closed admin's route to lunch broadcast sending
 - support broadcast sending to every user of some template email
 - emails handling with SENDGRID REST API
-- Hapi, MongoDb, SocketIo, Promises
+- Nodemailer emails sending
+- Hapi, MongoDb, SocketIo, Promises, Generators

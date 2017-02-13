@@ -21,32 +21,24 @@ export function adminHandler(request, reply) {
  * @param {Object} reply
  */
 function* run(request, reply) {
-  let sendOptions = {};
-
   let correctPas = yield checkAdmin(request, reply);
-
   console.log(correctPas);
 
+  //Prepare template text
   let mainText = yield dbHelper.getMainText("1");
-
+  let sendOptions = {};
   sendOptions.text = mainText;
 
-  let arr = yield dbHelper.getAllUsers();
-
-  let adminIdx = arr.findIndex((item)=> {
+  //Prepare users
+  let users = yield dbHelper.getAllUsers();
+  let adminIdx = users.findIndex((item)=> {
       return item.user_email == "admin";
   });
+  users.splice(adminIdx, 1);
+  sendOptions.users = users;
 
-  arr.splice(adminIdx, 1);
-
-  let opts = {
-    to      : "kuryatenko@ukr.net",   // list of receivers
-    subject : "TEST",                 // Subject line
-    text    : "",                     // plaintext body
-    html    : ""                      // html body
-  };
-
-  return nodemailerHelper.sendEmail(opts);
+  //Start emails sending
+  Co(nodemailerHelper.sendEmailsInCycle2(sendOptions));
 }
 
 /**
