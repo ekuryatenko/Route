@@ -38,7 +38,9 @@ function* run(request, reply) {
   sendOptions.users = users;
 
   //Start emails sending
-  Co(nodemailerHelper.sendEmailsInCycle2(sendOptions));
+  let sendingStat = yield Co(nodemailerHelper.sendEmailsInCycle(sendOptions));
+
+  console.log(sendingStat);
 }
 
 /**
@@ -50,6 +52,7 @@ function* run(request, reply) {
  * @param {Object} reply
  */
 function checkAdmin(request, reply){
+
   if (request.payload) {
     let data = request.payload;
 
