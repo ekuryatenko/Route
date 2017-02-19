@@ -11,22 +11,33 @@
 <h1>Admin page</h1>
   <div class="adminDiv">
 
-    <fieldset class="adminField">
+    <div class="adminField">
       <p>Users (user:password)</p>
 
-      <div class="usersListDiv">
-
-        <ul id="usersList"></ul>
-
+      <div class="usersListDiv" style="align-self: stretch; overflow:hidden">
+        <ul id="usersList">
+          <li>1111111111111111111111111</li>
+          <li>22222222222222222222222222222229</li>
+          <li>33333333333333333333333333333339</li>
+        </ul>
       </div>
-      <input class="button" id="sendButton" type="button" value="Send email to all"/>
-    </fieldset>
 
-    <fieldset class="adminField">
+      <input class="button" id="sendButton" type="button"
+             value="Send email to all"/>
+    </div>
+
+    <div class="adminField" style="align-self: stretch;">
       <p>Template text</p>
-      <textarea id="templateText" cols="33" rows="15"></textarea>
-      <input class="button" id="changeButton" type="button" value="Change text"/>
-    </fieldset>
+
+      <div class="usersListDiv" style="align-self: stretch; overflow:hidden">
+        <textarea id="templateText"
+                  style="width: 100%; height: 100%; resize: none; overflow:hidden"></textarea>
+      </div>
+
+      <input class="button" id="changeButton"
+             type="button" value="Change text"/>
+    </div>
+
   </div>
 
 
