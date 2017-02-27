@@ -28,31 +28,31 @@ server.register (Inert, (err) => {
       throw err;
     }
 
-    server.views ({
+    /*server.views ({
       // Registers the Pug as responsible for rendering of .pug files
       engines: {
         html: require('handlebars')
       },
       // Shows server where templates are located in
       path: __dirname + "./../frontend"
-    });
+    });*/
 
 
 
-    // Enables Pug
-    /*server.frontend ({
-     // Registers the Pug as responsible for rendering of .pug files
+    // Enables Pug - server.views method
+    server.views ({
+       // Registers the Pug as responsible for rendering of .pug files
      engines: {
-     html: require('handlebars'),
-     pug: Pug
+       html : require('handlebars'),
+       pug  : Pug
      },
      // Shows server where templates are located in
      path: __dirname + "./../frontend",
      // For correct page rendering: https://github.com/hapijs/vision#jade
      compileOptions: {
-     pretty: true
+      pretty: true
      }
-     })*/
+    });
 
       server.route (serverRoutes);
     });

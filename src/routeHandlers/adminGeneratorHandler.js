@@ -21,8 +21,8 @@ export function adminHandler(request, reply) {
  * @param {Object} reply
  */
 function* run(request, reply) {
-  let correctPas = yield checkAdmin(request, reply);
-  console.log(correctPas);
+  let isCorrectPas = yield checkAdmin(request, reply);
+  console.log(isCorrectPas);
 
   //Prepare template text
   let mainText = yield dbHelper.getMainText("1");
@@ -38,9 +38,11 @@ function* run(request, reply) {
   sendOptions.users = users;
 
   //Start emails sending
-  let sendingStat = yield Co(nodemailerHelper.sendEmailsInCycle(sendOptions));
-
-  console.log(sendingStat);
+  yield* Co(nodemailerHelper.sendEmailsInCycle(sendOptions)).then(
+    sendingStat => {
+      console.log("STAT: " + sendingStat);
+    }
+  );
 }
 
 /**

@@ -86,7 +86,9 @@ export const serverRoutes = [
     method: "GET",
     path: "/",
     handler: {
-      file: __dirname + "./../frontend/logInForm.html"
+      //Search for the given view, render the template and reply the HTML content
+      //Absolute paths are not allowed in views
+      view: "logInForm.pug"
     }
   },
   {
