@@ -1,0 +1,35 @@
+DOCTYPE
+html(lang="en")
+head
+  meta(charset="UTF-8")
+  title ROUTE: ADMIN PROFILE
+  link(type="text/css", rel="stylesheet", href="routeStyle.css")
+
+
+body
+
+  h1 Emailing service app. Admin page.
+
+  div.adminDiv
+
+    div.adminField
+      p Users (user:password)
+
+      div.usersListDiv
+        ul(id="usersList", style="align-self: stretch; overflow: hidden")
+
+      input.button(id="sendButton", type="button",
+                    value="Send email to all")
+
+
+    div.adminField(style="align-self: stretch")
+      p Template text
+
+      div.usersListDiv(style="align-self: stretch; overflow: hidden")
+        textarea(id="templateText")
+
+      input.button(id="changeButton",
+                   type="button", value="Change text")
+
+
+  script(src="adminProfile.js", defer)

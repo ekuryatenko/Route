@@ -1,0 +1,34 @@
+DOCTYPE
+html(lang="en")
+head
+  meta(charset="UTF-8")
+  title ROUTE: USER PROFILE
+  link(type="text/css", rel="stylesheet", href="routeStyle.css")
+
+
+body
+
+  h1 Emailing service app. User profile form.
+
+  div.profileDiv
+
+    div.profileDiv-field(style="border: none")
+      p(style="height:25px") Please, modify your profile
+
+    div.profileDiv-field
+      p Email
+      p(id="userLabel", style="height:25px")
+
+    div.profileDiv-field
+      p Password
+      input(id="passwordInput", type="text")
+
+    div.profileDiv-field
+      p Reply template
+      input(id="profileInput", type="text")
+
+    input(class="button", id="changeButton",
+            type="button", value="Change")
+
+
+  script(src="userProfile.js", defer)

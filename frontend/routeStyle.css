@@ -165,7 +165,7 @@ a {
   /*flex-wrap: wrap;*/
   justify-content: space-between;
   /*align-content: space-around;*/
-
+  margin: 25px;
   border-radius: 15px;
   border: 5px solid red;
   padding: 15px;

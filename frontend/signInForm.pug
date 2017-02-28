@@ -2,7 +2,7 @@ DOCTYPE
 html(lang="en")
 head
   meta(charset="UTF-8")
-  title ROUTE: LOG IN
+  title ROUTE: SIGN IN
   link(type="text/css", rel="stylesheet", href="routeStyle.css")
 
 
@@ -12,15 +12,16 @@ body
 
   div.authorizeDiv
 
-    p Please, log in
+    p Please, sign up
 
     input(id="user_email_input", type="text",
            placeholder="enter your email", name="email", autofocus)
-    input(id="password_first", type="password", name="pass",
+    input(id="password_first", type="password",
            placeholder="enter your password")
-    input(id="logInButton", type="submit",
-           class="button", value="Log in")
+    input(id="password_confirm", type="password",
+               placeholder="re-type your password")
     input(id="signInButton", type="button",
            class="button", value="Sign in")
 
-    script(src="logIn.js", defer)
+
+  script(src="signIn.js", defer)
