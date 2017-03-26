@@ -1,26 +1,26 @@
-import dbHelper from "./../helpers/dbHelper";
+import dbHelper from './../helpers/dbHelper';
+// TODO: console.log
+const DEFAULT_TEMPLATE_TEXT = 'Hello';
 
 /**
- * !!!!!!!!!
- *
- * @param {string} user_email - User email
+ * Has been sent from admin page
+ * Removes user profile from base
+ * @param {Object} reply - Holds server reply
+ * @param {string} userEmail - User email
  */
-export function removeUserProfileHandler(reply, user_email) {
-  let adminPageContent = {};
+export default function (reply, userEmail) {
+  const adminPageContent = {};
 
-  dbHelper.removeFromDb(user_email).
-    then((onDelete) => {
-      return dbHelper.getAllUsers();
-    })
+  dbHelper.removeFromDb(userEmail)
+    .then(() => dbHelper.getAllUsers())
     .then((users) => {
       adminPageContent.usersList = users;
-
-      return dbHelper.getMainText("1");
+      return dbHelper.getMainText('1');
     })
-    .then((text) =>{
-      if(text){
+    .then((text) => {
+      if (text) {
         adminPageContent.templateText = text;
-      }else{
+      } else {
         adminPageContent.templateText = DEFAULT_TEMPLATE_TEXT;
       }
       console.log(adminPageContent);

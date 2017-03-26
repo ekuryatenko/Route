@@ -1,21 +1,22 @@
-import dbHelper from "./../helpers/dbHelper";
-const Path = require('path');
+import dbHelper from './../helpers/dbHelper';
 
 /**
- * !!!!!
+ * Handles /setUserProfile from userProfileForm page
+ * Updates user profile by new data from request
+ * After that sends reply with result string
  *
  * @param {Object} request
  * @param {Object} reply
  */
-export function setUserProfileHandler(request, reply) {
+export default function (request, reply) {
   if (request.payload) {
-    let modificatedProfile = request.payload;
+    const modificatedProfile = request.payload;
     console.log(modificatedProfile);
 
     dbHelper.updateProfile(modificatedProfile)
       .then(
-        onUpdate => {
-          reply("YOUR PROFILE IS CHANGED");
+      () => {
+        reply('YOUR PROFILE IS CHANGED');
       });
   }
 }

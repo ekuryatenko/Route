@@ -1,16 +1,16 @@
-import dbHelper from "./../helpers/dbHelper";
+import dbHelper from './../helpers/dbHelper';
 
 /**
- * Fires when user has loaded user profile page and asks
- * to get his own personal data to fill in page forms
+ * Handles data request from userProfileForm page
+ * Replies with user personal data to fill in
+ * forms on page loading
  *
- * Result - user profile obj is sended to user
- *
- * @param {string} user_email - User login (email)
+ * @param {Object} reply - user profile data reply
+ * @param {string} userEmail - User login (email)
  */
-export function getUserProfileHandler(reply, user_email) {
-  if (user_email) {
-    dbHelper.getUserProfile(user_email).then((profile) => {
+export default function (reply, userEmail) {
+  if (userEmail) {
+    dbHelper.getUserProfile(userEmail).then((profile) => {
       console.log(JSON.stringify(profile));
       reply(JSON.stringify(profile));
     });

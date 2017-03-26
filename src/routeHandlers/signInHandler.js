@@ -1,109 +1,117 @@
-import dbHelper from "./../helpers/dbHelper";
-const Path = require('path');
-
-const USER_PROFILE_PAGE = "userProfileForm.html";
-const ADMIN_PAGE = "adminProfileForm.html";
-const LOG_IN_PAGE = "logInForm.html";
-const SIGN_IN_PAGE = "signInForm.html";
+import dbHelper from './../helpers/dbHelper';
+// TODO: console.log
+const USER_PROFILE_PAGE = 'userProfileForm.html';
 
 /**
- * !!!!!
+ * Finds user profile in base
+ *
+ * @param {String} userEmail
+ * @param {String} userPassword
+ * @return {Promise} returns Promise with result string
+ */
+function findUserInBase(userEmail, userPassword) {
+  return new Promise((resolve) => {
+    dbHelper.getAllUsers().then(
+      (users) => {
+        // 'User has found' flag
+        let found = false;
+        if (users.length) {
+          users.forEach((item) => {
+            if (item.user_email === userEmail) {
+              found = true;
+              if (item.password === userPassword) {
+                if (userEmail.toLowerCase() !== 'admin') {
+                  resolve('USER EXIST');
+                } else {
+                  resolve('USER IS ADMIN');
+                }
+              } else {
+                resolve('USER EXIST BUT NOT VALID PASS');
+              }
+            }
+          });
+          if (!found) {
+            resolve('NO USER FOUND');
+          }
+        }
+      });
+  });
+}
+
+/**
+ * Adds new user profile to base
+ *
+ * @param {String} userEmail
+ * @param {String} userPassword
+ * @return {Promise} returns Promise with result string
+ */
+function addUserToBase(userEmail, userPassword) {
+  const profile = {
+    user_email: userEmail,
+    password: userPassword,
+    emailTemplate: (userEmail.indexOf('@') > -1) ? userEmail.substr(0, userEmail.indexOf('@')) : userEmail
+  };
+  return dbHelper.addUserToBase(profile);
+}
+
+/**
+ * Handles submit from signIn page
+ * Provides new user registration
+ * After registration replies with array
+ * which holds following activities for client side
  *
  * @param {Object} request
  * @param {Object} reply
  */
-export function signInHandler(request, reply) {
+export default function (request, reply) {
   if (request.payload) {
-    let login_info = request.payload;
-    console.log(login_info);
+    const loginInfo = request.payload;
+    console.log(loginInfo);
 
-    const this_user_email = login_info.user_email,
-      this_user_password = login_info.fpass;
+    const thisUserEmail = loginInfo.user_email;
+    const thisUserPassword = loginInfo.fpass;
+    // Will hold activities for client side when server reply is get
+    const actionsForClient = [];
 
-    var actionsForClient = [];
-
-    findUserInBase(this_user_email, this_user_password)
+    findUserInBase(thisUserEmail, thisUserPassword)
       .then(
-        findRes => {
-            if (findRes == "USER IS ADMIN") {
+      (findRes) => {
+        if (findRes === 'USER IS ADMIN') {
+          actionsForClient.push({
+            action: 'alert',
+            msg: 'ADMIN PROFILE IS REFUSED'
+          });
+        } else if (findRes === 'USER EXIST') {
+          actionsForClient.push({
+            action: 'alert',
+            msg: 'USERNAME ALREADY EXISTS. PLEASE USE ANOTHER ONE.'
+          });
+        } else if (findRes === 'USER EXIST BUT NOT VALID PASS') {
+          actionsForClient.push({
+            action: 'alert',
+            msg: 'USERNAME ALREADY EXISTS. PLEASE USE ANOTHER ONE.'
+          });
+        } else if (findRes === 'NO USER FOUND') {
+          return addUserToBase(thisUserEmail, thisUserPassword)
+            .then(
+            () => {
               actionsForClient.push({
-                action: "alert",
-                msg: "ADMIN PROFILE IS REFUSED"
+                action: 'alert',
+                msg: 'YOUR ACCOUNT HAS BEEN CREATED.'
               });
-            } else if (findRes == "USER EXIST") {
               actionsForClient.push({
-                action: "alert",
-                msg: "USERNAME ALREADY EXISTS. PLEASE USE ANOTHER ONE."
+                action: 'redirect',
+                href: USER_PROFILE_PAGE
               });
-            } else if (findRes == "USER EXIST BUT NOT VALID PASS") {
-              actionsForClient.push({
-                action: "alert",
-                msg: "USERNAME ALREADY EXISTS. PLEASE USE ANOTHER ONE."
-              });
-            } else if (findRes == "NO USER FOUND") {
-                return addUserToBase(this_user_email, this_user_password)
-                  .then(
-                    () => {
-                      //1
-                      actionsForClient.push({
-                        action: "alert",
-                        msg: "YOUR ACCOUNT HAS BEEN CREATED."
-                      });
-
-                      //2
-                      actionsForClient.push({
-                        action: "redirect",
-                        href: USER_PROFILE_PAGE
-                      });
-                    }
-                );
-           }
-        })
+            }
+          );
+        }
+        return 0;
+      })
       .then(
-        () => {
-          console.log(actionsForClient);
-          reply(JSON.stringify(actionsForClient));
+      () => {
+        console.log(actionsForClient);
+        reply(JSON.stringify(actionsForClient));
       });
   }
-}
-
-function findUserInBase(this_user_email, this_user_password){
-  return dbHelper.getAllUsers().then(
-      users => {
-        return new Promise(function(resolve, reject) {
-          // "User has found" flag
-          let found = false;
-
-          if (users.length) {
-            users.forEach(user => {
-              if (user.user_email === this_user_email) {
-                found = true;
-
-                if (user.password === this_user_password) {
-                  if (this_user_email.toLowerCase() != "admin") {
-                    resolve("USER EXIST");
-                  }else{
-                    resolve("USER IS ADMIN");
-                  }
-                } else {
-                  resolve("USER EXIST BUT NOT VALID PASS");
-                }
-              }
-            });
-
-            if (!found) {
-              resolve("NO USER FOUND");
-            }
-          }
-    });
-  })
-}
-
-function addUserToBase(user_email, user_password) {
-    let profile = {
-      user_email: user_email,
-      password: user_password,
-      emailTemplate: (user_email.indexOf("@") > -1) ? user_email.substr(0, user_email.indexOf("@")) : user_email
-    };
-    return dbHelper.addUserToBase(profile);
 }

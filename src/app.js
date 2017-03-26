@@ -1,71 +1,59 @@
-import * as Path    from "path";
-import * as Hapi    from "hapi";
-import * as Inert   from "inert";
-import * as Vision  from "vision";
-import * as Pug     from "pug";
-import * as HapiXhr from "hapi-xhr";
+import * as Path from 'path';
+import * as Hapi from 'hapi';
+import * as Inert from 'inert';
+import * as Vision from 'vision';
+import * as Pug from 'pug';
+import * as HapiXhr from 'hapi-xhr';
+import serverRoutes from './myRoute';
 
-import {serverRoutes as serverRoutes} from "./myRoute";
+// TODO: Remove callbacks
+const server = new Hapi.Server();
 
-const server = new Hapi.Server ();
-
-server.connection ({port: process.env.PORT});
+server.connection({ port: process.env.PORT });
 
 // Static files support
-server.register (Inert, (err) => {
+server.register(Inert, (err) => {
   if (err) {
     throw err;
   }
 
-  server.register (HapiXhr, (err) => {
+  server.register(HapiXhr, (err) => {
     if (err) {
       throw err;
     }
 
     // Adds templates rendering support by vision plugin
-  server.register (Vision, (err) => {
-    if (err) {
-      throw err;
-    }
+    server.register(Vision, (err) => {
+      if (err) {
+        throw err;
+      }
 
-    /*server.views ({
-      // Registers the Pug as responsible for rendering of .pug files
-      engines: {
-        html: require('handlebars')
-      },
-      // Shows server where templates are located in
-      path: __dirname + "./../frontend"
-    });*/
+      // Enables Pug - server.views method
+      server.views({
+        // Registers the Pug as responsible for rendering of .pug files
+        engines: {
+          html: require('handlebars'),
+          pug: Pug
+        },
+        // Shows server where templates are located in
+        path: `${__dirname} ./../frontend`,
+        // For correct page rendering: https://github.com/hapijs/vision#jade
+        compileOptions: {
+          pretty: true
+        }
+      });
 
-
-
-    // Enables Pug - server.views method
-    server.views ({
-       // Registers the Pug as responsible for rendering of .pug files
-     engines: {
-       html : require('handlebars'),
-       pug  : Pug
-     },
-     // Shows server where templates are located in
-     path: __dirname + "./../frontend",
-     // For correct page rendering: https://github.com/hapijs/vision#jade
-     compileOptions: {
-      pretty: true
-     }
-    });
-
-      server.route (serverRoutes);
+      server.route(serverRoutes);
     });
   });
-
 });
 
-server.start ((err) => {
+server.start((err) => {
   if (err) {
     throw err;
   }
 
   // Callback after my server's running
-  console.log ("SERVER: app running at ", server.info.uri);
+  console.log('SERVER: app running at ', server.info.uri);
 });
 

@@ -1,157 +1,155 @@
-import {getTemplateSample}          from "./routeHandlers/pathHandler.js";
-import {incomingMailHandler}        from "./routeHandlers/incomingMailHandler.js";
-import {adminHandler}               from "./routeHandlers/adminGeneratorHandler.js";
-import {loginHandler}               from "./routeHandlers/loginHandler.js";
-import {signInHandler}              from "./routeHandlers/signInHandler.js";
-import {getUserProfileHandler}      from "./routeHandlers/getUserProfileHandler.js";
-import {setUserProfileHandler}      from "./routeHandlers/setUserProfileHandler.js";
-import {getAdminPageHandler}        from "./routeHandlers/getAdminPageHandler.js";
-import {removeUserProfileHandler}   from "./routeHandlers/removeUserProfileHandler.js";
-import {updateAdminTemplateHandler} from "./routeHandlers/updateAdminTemplateHandler.js";
+// TODO: resolve path for ESLint ... or unresolve
+import path from 'path';
+import { incomingMailHandler } from './routeHandlers/incomingMailHandler';
+import adminHandler from './routeHandlers/adminGeneratorHandler';
+import loginHandler from './routeHandlers/loginHandler';
+import signInHandler from './routeHandlers/signInHandler';
+import getUserProfileHandler from './routeHandlers/getUserProfileHandler';
+import setUserProfileHandler from './routeHandlers/setUserProfileHandler';
+import { getAdminPageHandler } from './routeHandlers/getAdminPageHandler';
+import removeUserProfileHandler from './routeHandlers/removeUserProfileHandler';
+import updateAdminTemplateHandler from './routeHandlers/updateAdminTemplateHandler';
 
 // Main routes for app server
-// TODO: Search in internet - how to organize such handler files
-export const serverRoutes = [
+export default [
   {
-    method: "POST",
-    path: "/login",
-    handler: function (request, reply) {
+    method: 'POST',
+    path: '/login',
+    handler: (request, reply) => {
       loginHandler(request, reply);
     }
   },
   {
-    method: "POST",
-    path: "/signIn",
-    handler: function (request, reply) {
+    method: 'POST',
+    path: '/signIn',
+    handler: (request, reply) => {
       signInHandler(request, reply);
     }
   },
   {
-    method: "POST",
-    path: "/admin",
-    handler: function (request, reply) {
+    method: 'POST',
+    path: '/admin',
+    handler: (request, reply) => {
       adminHandler(request, reply);
     }
   },
   {
-    method: "POST",
-    path: "/incomingMail",
-    handler: function (request, reply) {
+    method: 'POST',
+    path: '/incomingMail',
+    handler: (request, reply) => {
       incomingMailHandler(request, reply);
     }
   },
   {
-    method: "GET",
-    path: "/path/{user}",
-    handler: function (request, reply) {
-      getTemplateSample(reply, request.params.user);
-    }
-  },
-  {
-    method: "GET",
-    path: "/getUserProfileHandler/{user}",
-    handler: function (request, reply) {//test if no params in url
+    method: 'GET',
+    path: '/getUserProfileHandler/{user}',
+    // TODO: test if no params in url
+    handler: (request, reply) => {
       getUserProfileHandler(reply, request.params.user);
     }
   },
   {
-    method: "POST", //TODO: POST ?   + think how to decompose this array of handlers
-    path: "/setUserProfile",
-    handler: function (request, reply) {
+    // TODO: POST ?   + think how to decompose this array of handlers
+    method: 'POST',
+    path: '/setUserProfile',
+    handler: (request, reply) => {
       setUserProfileHandler(request, reply);
     }
   },
   {
-    method: "POST",
-    path: "/updateAdminTemplate",
-    handler: function (request, reply) {
+    method: 'POST',
+    path: '/updateAdminTemplate',
+    handler: (request, reply) => {
       updateAdminTemplateHandler(request, reply);
     }
   },
   {
-    method: "GET",
-    path: "/getAdminPageContent",
-    handler: function (request, reply) {
+    method: 'GET',
+    path: '/getAdminPageContent',
+    handler: (request, reply) => {
       getAdminPageHandler(reply);
     }
   },
   {
-    method: "GET",
-    path: "/removeUserProfile/{user}",
-    handler: function (request, reply) {
+    method: 'GET',
+    path: '/removeUserProfile/{user}',
+    handler: (request, reply) => {
       removeUserProfileHandler(reply, request.params.user);
     }
   },
   {
-    method: "GET",
-    path: "/",
+    method: 'GET',
+    path: '/',
     handler: {
-      //Search for the given view, render the template and reply the HTML content
-      //Absolute paths are not allowed in views
-      view: "logInForm.pug"
+      // TODO: check comments
+      // Search for the given view, render the template and reply the HTML content
+      // Absolute paths are not allowed in views
+      view: 'logInForm.pug'
     }
   },
   {
-    method: "GET",
-    path: "/logInForm.html",
+    method: 'GET',
+    path: '/logInForm.html',
     handler: {
-      file: __dirname + "./../frontend/logInForm.html"
+      // Search for the given view, render the template and reply the HTML content
+      // Absolute paths are not allowed in views
+      view: 'logInForm.pug'
     }
   },
   {
-    method: "GET",
-    path: "/signInForm.html",
+    method: 'GET',
+    path: '/signInForm.html',
     handler: {
-      file: __dirname + "./../frontend/signInForm.html"
+      // Search for the given view, render the template and reply the HTML content
+      // Absolute paths are not allowed in views
+      view: 'signInForm.pug'
     }
   }, {
-    method: "GET",
-    path: "/userProfileForm.html",
+    method: 'GET',
+    path: '/userProfileForm.html',
     handler: {
-      file: __dirname + "./../frontend/userProfileForm.html"
+      // Search for the given view, render the template and reply the HTML content
+      // Absolute paths are not allowed in views
+      view: 'userProfileForm.pug'
     }
   }, {
-    method: "GET",
-    path: "/adminProfileForm.html",
+    method: 'GET',
+    path: '/adminProfileForm.html',
     handler: {
-      file: __dirname + "./../frontend/adminProfileForm.html"
+      // Search for the given view, render the template and reply the HTML content
+      // Absolute paths are not allowed in views
+      view: 'adminProfileForm.pug'
     }
   }, {
-    method: "GET",
-    path: "/routeStyle.css",
+    // TODO: __dirname - https://www.airpair.com/javascript/posts/using-es6-harmony-with-nodejs
+    method: 'GET',
+    path: '/routeStyle.css',
     handler: {
-      file: __dirname + "./../frontend/routeStyle.css"
+      file: path.join(__dirname, './../frontend/routeStyle.css')
     }
   }, {
-    method: "GET",
-    path: "/logIn.js",
+    method: 'GET',
+    path: '/logIn.js',
     handler: {
-      file: __dirname + "/public/logIn.js"
+      file: path.join(__dirname, '/public/logIn.js')
     }
   }, {
-    method: "GET",
-    path: "/signIn.js",
+    method: 'GET',
+    path: '/signIn.js',
     handler: {
-      file: __dirname + "/public/signIn.js"
+      file: path.join(__dirname, '/public/signIn.js')
     }
   }, {
-    method: "GET",
-    path: "/userProfile.js",
+    method: 'GET',
+    path: '/userProfile.js',
     handler: {
-      file: __dirname + "/public/userProfile.js"
+      file: path.join(__dirname, '/public/userProfile.js')
     }
   }, {
-    method: "GET",
-    path: "/adminProfile.js",
+    method: 'GET',
+    path: '/adminProfile.js',
     handler: {
-      file: __dirname + "/public/adminProfile.js"
-    }
-  }, {
-    method: "GET",
-    path: "/socket.io-1.2.0.js",
-    handler: {
-      file: __dirname + "./../socket/socket.io-1.2.0.js"
+      file: path.join(__dirname, '/public/adminProfile.js')
     }
   }
 ];
-

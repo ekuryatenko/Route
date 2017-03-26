@@ -1,15 +1,15 @@
-import dbHelper from "./../helpers/dbHelper";
-
+import dbHelper from './../helpers/dbHelper';
+// TODO: console.log
 /**
  * Fires when admin has submitted new text template from admin page
+ * Saves new template in db, and admin get prompt
  *
- * Result - new template has saved in db, and admin get prompt
- *
- * @param {Object} newTemplateText - New template
+ * @param {Object} request
+ * @param {Object} reply - Holds new template text
  */
-export function updateAdminTemplateHandler(request, reply) {
+export default function (request, reply) {
   if (request.payload) {
-    let newAdminTemplate = request.payload;
+    const newAdminTemplate = request.payload;
     console.log(newAdminTemplate);
 
     // Update database template text
@@ -17,11 +17,11 @@ export function updateAdminTemplateHandler(request, reply) {
       .then(
       () => {
         // Confirm user
-        reply("TEMPLATE CHANGED!");
+        reply('TEMPLATE CHANGED!');
       },
-      err => {
+      (err) => {
         // Confirm user
-        reply("TEMPLATE UPDATE ERROR: " + err);//TODO: to order all alerts messages
+        reply(`TEMPLATE UPDATE ERROR:  + ${err}`);// TODO: to order all alerts messages
       });
   }
 }

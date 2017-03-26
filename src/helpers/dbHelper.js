@@ -1,5 +1,5 @@
 // Establish a connection to the mongo database
-import {MongoClient as MONGO_CLIENT} from "mongodb";
+import { MongoClient as MONGO_CLIENT } from 'mongodb';
 
 const DB_URI = process.env.MONGODB_URI;
 
