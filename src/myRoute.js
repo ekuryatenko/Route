@@ -6,7 +6,7 @@ import loginHandler from './routeHandlers/loginHandler';
 import signInHandler from './routeHandlers/signInHandler';
 import getUserProfileHandler from './routeHandlers/getUserProfileHandler';
 import setUserProfileHandler from './routeHandlers/setUserProfileHandler';
-import { getAdminPageHandler } from './routeHandlers/getAdminPageHandler';
+import getAdminPageHandler from './routeHandlers/getAdminPageHandler';
 import removeUserProfileHandler from './routeHandlers/removeUserProfileHandler';
 import updateAdminTemplateHandler from './routeHandlers/updateAdminTemplateHandler';
 
