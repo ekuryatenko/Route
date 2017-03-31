@@ -1,8 +1,8 @@
-import * as Path from 'path';
-import * as Hapi from 'hapi';
-import * as Inert from 'inert';
-import * as Vision from 'vision';
-import * as Pug from 'pug';
+import Path from 'path';
+import Hapi from 'hapi';
+import Inert from 'inert';
+import Vision from 'vision';
+import Pug from 'pug';
 import Handlebars from 'Handlebars';
 import serverRoutes from './myRoute';
 
