@@ -3,7 +3,7 @@ import Hapi from 'hapi';
 import Inert from 'inert';
 import Vision from 'vision';
 import Pug from 'pug';
-import Handlebars from 'Handlebars';
+import Handlebars from 'handlebars';
 import serverRoutes from './myRoute';
 
 // TODO: Remove callbacks
