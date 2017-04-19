@@ -1,5 +1,3 @@
-"use strict";
-
 /**
  * Returns reference to selector page object
  * @param {String} selector
@@ -16,22 +14,22 @@ export function getNode(selector) {
  */
 export function httpGet(url) {
   return new Promise((resolve, reject) => {
-    var xhr = new XMLHttpRequest();
+    const xhr = new XMLHttpRequest();
 
-    xhr.open("GET", url, true);
+    xhr.open('GET', url, true);
 
     xhr.onload = function () {
-      if (this.status == 200) {
+      if (this.status === 200) {
         resolve(this.responseText);
       } else {
-        var error = new Error(this.statusText);
+        const error = new Error(this.statusText);
         error.code = this.status;
         reject(error);
       }
     };
 
     xhr.onerror = function () {
-      reject(new Error("Network Error"));
+      reject(new Error('Network Error'));
     };
 
     xhr.send();
@@ -46,23 +44,23 @@ export function httpGet(url) {
  */
 export function httpPost(url, stringToPost) {
   return new Promise((resolve, reject) => {
-    var xhr = new XMLHttpRequest();
-    xhr.open("POST", url, true);
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', url, true);
 
-    xhr.setRequestHeader("Content-type", "application/json; charset=utf-8");
+    xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
 
     xhr.onload = function () {
-      if (this.status == 200) {
+      if (this.status === 200) {
         resolve(this.responseText);
       } else {
-        var error = new Error(this.statusText);
+        const error = new Error(this.statusText);
         error.code = this.status;
         reject(error);
       }
     };
 
     xhr.onerror = function () {
-      reject(new Error("Network Error"));
+      reject(new Error('Network Error'));
     };
 
     xhr.send(stringToPost);
@@ -77,13 +75,13 @@ export function httpPost(url, stringToPost) {
  */
 export function httpPostForm(url, encodedStringToPost) {
   return new Promise((resolve, reject) => {
-    var xhr = new XMLHttpRequest();
-    xhr.open("POST", url, true);
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', url, true);
 
-    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 
     xhr.onload = function () {
-      if (this.status == 200) {
+      if (this.status === 200) {
         resolve(this.responseText);
       } else {
         var error = new Error(this.statusText);
@@ -93,7 +91,7 @@ export function httpPostForm(url, encodedStringToPost) {
     };
 
     xhr.onerror = function () {
-      reject(new Error("Network Error"));
+      reject(new Error('Network Error'));
     };
 
     xhr.send(encodedStringToPost);
@@ -111,7 +109,7 @@ export function handleRequestError(error) {
  * Makes red border for called object
  */
 export function makeRedBorder() {
-  this.style.border = "5px solid red";
+  this.style.border = '5px solid red';
 }
 
 /**
@@ -119,5 +117,5 @@ export function makeRedBorder() {
  * @param {Object} field - Page DOM node
  */
 export function removeBorder(field) {
-  field.style.border = "none";
+  field.style.border = 'none';
 }

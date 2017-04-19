@@ -6,10 +6,12 @@ import Pug from 'pug';
 import Handlebars from 'handlebars';
 import serverRoutes from './myRoute';
 
-// TODO: Remove callbacks
-// TODO: Async here
-// TODO: Is Path need
-
+/**
+ * Involves plugins to Server
+ *
+ * @param {Object} server
+ * @param {String} pluginName
+ */
 async function hapiRegister(server, pluginName) {
   return new Promise((resolve, reject) => {
     server.register(pluginName, (err) => {
@@ -21,6 +23,10 @@ async function hapiRegister(server, pluginName) {
   });
 }
 
+/**
+ * Provides main initial settings for hapi server
+ * Starts server
+ */
 async function runServer() {
   const server = new Hapi.Server();
   server.connection({ port: process.env.PORT });
@@ -41,14 +47,9 @@ async function runServer() {
     }
   });
   server.route(serverRoutes);
-  server.start((err) => {
-    if (err) {
-      throw err;
-    }
-
-    // Callback after my server's running
-    console.log('SERVER: app running at ', server.info.uri);
-  });
+  await server.start();
+  // Callback after my server's running
+  console.log('SERVER: app running at ', server.info.uri);
 }
 
 runServer();

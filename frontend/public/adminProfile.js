@@ -1,5 +1,3 @@
-"use strict";
-
 /**
  * TODO: sort items in import
  * TODO: edit everything due to ES6
@@ -12,65 +10,46 @@
  */
 
 import {
+  handleRequestError,
   httpGet,
   httpPost,
   getNode,
   makeRedBorder,
-  removeBorder,
-  handleRequestError
-} from "./clientLib.js";
+  removeBorder
+} from './clientLib';
 
-/**************************
+/** ************************
  * Get page fields
  **************************/
 
-const BASE_USERS_LIST     = getNode("#usersList");
-const TEMPLATE_TEXT_FIELD = getNode("#templateText");
-const CHANGE_BUTTON       = getNode("#changeButton");
-const SEND_TO_ALL_BUTTON  = getNode("#sendButton");
+const BASE_USERS_LIST = getNode('#usersList');
+const TEMPLATE_TEXT_FIELD = getNode('#templateText');
+const CHANGE_BUTTON = getNode('#changeButton');
+const SEND_TO_ALL_BUTTON = getNode('#sendButton');
 
-/**************************
+/** ************************
  * On page load events
- **************************/
+ ** ************************/
 
 // Requests server for page data and put them to page nodes
 getPageContentFromServer();
 
-/**************************
+/** ************************
  * Page nodes events
- **************************/
+ ** ************************/
 
 // Shows changes on text template field
-TEMPLATE_TEXT_FIELD.addEventListener("input", makeRedBorder);
+TEMPLATE_TEXT_FIELD.addEventListener('input', makeRedBorder);
 
 // Sends to server modificated template text for saving
-CHANGE_BUTTON.addEventListener("click", sendNewTemplateToServer);
+CHANGE_BUTTON.addEventListener('click', sendNewTemplateToServer);
 
 // Initiates emails sending to every user
-SEND_TO_ALL_BUTTON.addEventListener("click", () => {
-  //TODO: ("sendToAll");
-});
+SEND_TO_ALL_BUTTON.addEventListener('click', sendEmailToAll);
 
-/**************************
+/** ************************
  * Declarations
- **************************/
-
-/**
- * Request page content from server and fills
- * page fields by obtained data
- */
-function getPageContentFromServer() {
-  httpGet("/getAdminPageContent")
-    .then(
-      response => {
-        let pageContent = JSON.parse(response);
-        setAdminPageContent(pageContent);
-    },
-      error => {
-        handleRequestError(error);
-    }
-  );
-}
+ ** ************************/
 
 /**
  * Fills page fields by content data from param
@@ -80,11 +59,11 @@ function setAdminPageContent(pageContent) {
   TEMPLATE_TEXT_FIELD.value = pageContent.templateText;
 
   pageContent.usersList.forEach((item) => {
-    if (item.user_email.toUpperCase() != "ADMIN") {
-      const newLi = document.createElement("li");
+    if (item.user_email.toUpperCase() !== 'ADMIN') {
+      const newLi = document.createElement('li');
 
-      const newA = document.createElement("a");
-      newA.href = "#";
+      const newA = document.createElement('a');
+      newA.href = '#';
       newA.innerHTML = `${item.user_email}: ${item.password}`;
       newA.name = item.user_email;
 
@@ -92,28 +71,45 @@ function setAdminPageContent(pageContent) {
       BASE_USERS_LIST.appendChild(newLi);
 
       // Realize user removing
-      newA.addEventListener("click", () => {
+      newA.addEventListener('click', () => {
         if (confirm(`DO YOU WANT TO DELETE ${newA.name}?`)) {
-          let qty = (BASE_USERS_LIST.childNodes.length);
+          const qty = (BASE_USERS_LIST.childNodes.length);
 
-          for (var i = 0; i < qty; i++) {
+          for (let i = 0; i < qty; i += 1) {
             BASE_USERS_LIST.removeChild(BASE_USERS_LIST.firstChild);
           }
 
           httpGet(`/removeUserProfile/${encodeURIComponent(newA.name)}`)
             .then(
-              response => {
-                let newPageContent = JSON.parse(response);
+              (response) => {
+                const newPageContent = JSON.parse(response);
                 setAdminPageContent(newPageContent);
-            },
-              error => {
+              },
+              (error) => {
                 handleRequestError(error);
-            }
+              }
           );
         }
       });
     }
   });
+}
+
+/**
+ * Request page content from server and fills
+ * page fields by obtained data
+ */
+function getPageContentFromServer() {
+  httpGet('/getAdminPageContent')
+    .then(
+    (response) => {
+      const pageContent = JSON.parse(response);
+      setAdminPageContent(pageContent);
+    },
+    (error) => {
+      handleRequestError(error);
+    }
+  );
 }
 
 /**
@@ -123,18 +119,38 @@ function sendNewTemplateToServer() {
   const newText = TEMPLATE_TEXT_FIELD.value;
 
   const newTemplate = {
-    version: "1",
+    version: '1',
     text: newText
   };
 
-  httpPost("/updateAdminTemplate", JSON.stringify(newTemplate))
+  httpPost('/updateAdminTemplate', JSON.stringify(newTemplate))
     .then(
-      response => {
+      (response) => {
         alert(`SERVER RESPONSE: ${response}`);
         removeBorder(TEMPLATE_TEXT_FIELD);
-    },
-      error => {
+      },
+      (error) => {
         handleRequestError(error);
-    }
+      }
   );
+}
+
+/**
+ * Sends to server request of emails sending
+ * to all users
+ */
+async function sendEmailToAll() {
+  // TODO: couldn't realize makeRedBorder() from clientLib here
+  SEND_TO_ALL_BUTTON.style.border = '5px solid red';
+  const oldValue = SEND_TO_ALL_BUTTON.value;
+  SEND_TO_ALL_BUTTON.value = 'Sending...';
+  try {
+    const res = await httpGet('/sendEmailToAll');
+    removeBorder(SEND_TO_ALL_BUTTON);
+    SEND_TO_ALL_BUTTON.value = oldValue;
+    return alert(res);
+  } catch(err) {
+    SEND_TO_ALL_BUTTON.value = oldValue;
+    return alert('ERROR');
+  }
 }

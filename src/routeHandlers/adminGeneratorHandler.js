@@ -2,6 +2,7 @@
 import Co from 'co';
 import dbHelper from './../helpers/dbHelper';
 import nodemailerHelper from './../helpers/nodemailerHelper';
+import stream from 'stream';
 
 /**
  * Checks admin password from POST
@@ -11,7 +12,7 @@ import nodemailerHelper from './../helpers/nodemailerHelper';
  * @param {Object} request
  * @param {Object} reply
  */
-function checkAdmin(request, reply) {
+function checkAdmin(request) {
   return new Promise((resolve, reject) => {
     if (request.payload) {
       const data = request.payload;
@@ -20,23 +21,17 @@ function checkAdmin(request, reply) {
         dbHelper.getAdminPas().then(
           (adminPas) => {
             if (pas === adminPas) {
-              reply('HELLO ADMIN! I START SENDING EMAILS ...');
-
               resolve('ADMIN IS VALID! START SENDING EMAILS ...');
             } else {
-              reply('ADMIN PASSWORD IS NOT VALID!');
-
               reject('GET WRONG ADMIN PASSWORD');
             }
           });
       } else {
         console.log('NO PASSSWORD IN ADMIN POST!');
-        reply('REPLY: NO PASSSWORD IN ADMIN POST!');
         reject('REJECT: NO PASSSWORD IN ADMIN POST!');
       }
     } else {
       console.log('GET WRONG ADMIN POST!');
-      reply('REPLY: GET WRONG ADMIN POST!');
       reject('REJECT: GET WRONG ADMIN POST!');
     }
   });
@@ -51,24 +46,44 @@ function checkAdmin(request, reply) {
  * @param {Object} reply
  */
 function* adminRequestHandler(request, reply) {
-  const isCorrectPas = yield checkAdmin(request, reply);
-  console.log(isCorrectPas);
+  const outputStream = stream.Readable();
+  outputStream._read = function (size) {};
 
-  // Prepare template text
-  const mainText = yield dbHelper.getMainText('1');
-  const sendOptions = {};
-  sendOptions.text = mainText;
+  try {
+    const isCorrectPas = yield checkAdmin(request);
+    console.log(isCorrectPas);
+    outputStream.push(`${isCorrectPas}
+    `);
 
-  // Prepare users
-  const users = yield dbHelper.getAllUsers();
-  const adminIdx = users.findIndex(item => item.user_email === 'admin');
-  users.splice(adminIdx, 1);
-  sendOptions.users = users;
+    // Prepare template text
+    const mainText = yield dbHelper.getMainText('1');
+    // Prepare users
+    const users = yield dbHelper.getAllUsers();
+    const adminIdx = users.findIndex(item => item.user_email === 'admin');
+    users.splice(adminIdx, 1);
 
-  // Start emails sending
-  yield* Co(nodemailerHelper.sendEmailsInCycle(sendOptions)).then(
-      emailSendingStat => console.log(`STATISTIC: ${emailSendingStat}`)
-  );
+    const mailingContent = {};
+    mailingContent.text = mainText;
+    mailingContent.users = users;
+    mailingContent.subject = `${process.env.APP_DOMAIN} APP: NODEMAILER MAILING DUE TO ADMIN PATH`;
+
+    // Start emails sending
+    yield* Co(nodemailerHelper.sendEmailsInCycle(mailingContent))
+      .then(
+      (emailSendingStat) => {
+        console.log(`STATISTIC: ${emailSendingStat}`);
+        outputStream.push(`STATISTIC: ${emailSendingStat}
+        `);
+        outputStream.push(null);
+      }
+    );
+    reply(outputStream);
+  } catch (err) {
+    console.log(err);
+    outputStream.push(err);
+    outputStream.push(null);
+    reply(outputStream);
+  }
 }
 
 function onerror(err) {
@@ -79,10 +94,18 @@ function onerror(err) {
 }
 
 /**
+ * Replies on admins path request
+ * If request passes password test sends
+ * emails to all users in cycle.
+ * Provides diagnostic stream to admin in reply
+ *
  * ReferenceError: regeneratorRuntime is not defined
  * http://stackoverflow.com/questions/33527653/babel-6-regeneratorruntime-is-not-defined-with-async-await
  * https://github.com/babel/babelify/issues/28
- * https://www.npmjs.com/package/babel-plugin-transform-runtime
+ * https://www.npmjs.com/package/babel-runtime
+ *
+ * @param {Object} request
+ * @param {Object} reply
  */
 export default function (request, reply) {
   Co(adminRequestHandler(request, reply)).catch(onerror);

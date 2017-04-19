@@ -1,85 +1,51 @@
-"use strict";
-
 import {
+  handleRequestError,
   httpGet,
   httpPost,
   getNode,
-  makeRedBorder,
-  handleRequestError
-} from "./clientLib.js";
+  makeRedBorder
+} from './clientLib';
 
-/**************************
+/** ************************
  * Get page fields
- **************************/
+ ** ************************/
 
-const USER_LABEL     = getNode("#userLabel");
-const PASSWORD_INPUT = getNode("#passwordInput");
-const PROFILE_INPUT  = getNode("#profileInput");
-const CHANGE_BUTTON  = getNode("#changeButton");
+const USER_LABEL = getNode('#userLabel');
+const PASSWORD_INPUT = getNode('#passwordInput');
+const PROFILE_INPUT = getNode('#profileInput');
+const CHANGE_BUTTON = getNode('#changeButton');
 
-/**************************
+/** ************************
  * On page load events
- **************************/
+ ** ************************/
 
-document.addEventListener("DOMContentLoaded", getProfileData);//TODO: modify or include this in other files
+document.addEventListener('DOMContentLoaded', getProfileData);//TODO: modify or include this in other files
 
-/**************************
- * Page nodes events
- **************************/
-
-// Initiates user message sending on Enter key due to input focus
-PASSWORD_INPUT.addEventListener ("keypress", changeProfileOnEnterKey);
-PROFILE_INPUT.addEventListener ("keypress", changeProfileOnEnterKey);
-
-// Points to user that he changed field's value
-PASSWORD_INPUT.addEventListener ("input", makeRedBorder);
-PROFILE_INPUT.addEventListener ("input", makeRedBorder);
-
-// Sends to server modificated users profile data
-CHANGE_BUTTON.addEventListener("click", changeProfileOnServerSide);
-
-/**************************
+/** ************************
  * Declarations
- **************************/
+ ** ************************/
 
 /**
  * Asks server for this session user data and fills page fields
  */
 function getProfileData() {
   // Retrieve user reference from session storage
-  const ss_user_email = sessionStorage.getItem("ss_user_profile");
+  const ssUserEmail = sessionStorage.getItem('ss_user_profile');
 
-  httpGet("/getUserProfileHandler/" +  encodeURIComponent(ss_user_email))
+  httpGet(`/getUserProfileHandler/${encodeURIComponent(ssUserEmail)}`)
     .then(
-      response => {
-        const profile        = JSON.parse(response);
+      (response) => {
+        const profile = JSON.parse(response);
         USER_LABEL.innerHTML = profile.user_email;
         PASSWORD_INPUT.value = profile.password;
-        PROFILE_INPUT.value  = profile.emailTemplate;
+        PROFILE_INPUT.value = profile.emailTemplate;
 
-        PASSWORD_INPUT.style.border = "none";
-        PROFILE_INPUT.style.border  = "none";
-    },
-      error => {
+        PASSWORD_INPUT.style.border = 'none';
+        PROFILE_INPUT.style.border = 'none';
+      },
+      (error) => {
         handleRequestError(error);
-    }
-  );
-}
-
-/**
- * Sends profile fields to server and refreshes page after
- * server updating
- */
-function changeProfileOnServerSide() {
-  sendModifiedProfile()
-    .then(
-      response => {
-        alert(`SERVER RESPONSE: ${response}`);//TODO: include "SERVER RESPONSE: " to all files
-        getProfileData();
-    },
-      error => {
-        handleRequestError(error);
-    }
+      }
   );
 }
 
@@ -88,18 +54,34 @@ function changeProfileOnServerSide() {
  */
 function sendModifiedProfile() {
   // Checks for empty fields
-  if (PASSWORD_INPUT.value === "" || PROFILE_INPUT.value === "") {
-    alert("Whoops, you missed one!");
-    return;
+  if (PASSWORD_INPUT.value === '' || PROFILE_INPUT.value === '') {
+    alert('Whoops, you missed one!');
+    return undefined;
   }
 
-  const profile_obj = {
-    user_email    : USER_LABEL.innerHTML,
-    password      : PASSWORD_INPUT.value,
-    emailTemplate : PROFILE_INPUT.value
+  const profileObj = {
+    user_email: USER_LABEL.innerHTML,
+    password: PASSWORD_INPUT.value,
+    emailTemplate: PROFILE_INPUT.value
   };
 
-  return httpPost("/setUserProfile", JSON.stringify(profile_obj));
+  return httpPost('/setUserProfile', JSON.stringify(profileObj));
+}
+/**
+ * Sends profile fields to server and refreshes page after
+ * server updating
+ */
+function changeProfileOnServerSide() {
+  sendModifiedProfile()
+    .then(
+      (response) => {
+        alert(`SERVER RESPONSE: ${response}`);// TODO: include 'SERVER RESPONSE: " to all files
+        getProfileData();
+      },
+      (error) => {
+        handleRequestError(error);
+      }
+  );
 }
 
 /**
@@ -112,3 +94,18 @@ function changeProfileOnEnterKey(event) {
     changeProfileOnServerSide();
   }
 }
+
+/** ************************
+ * Page nodes events
+ ** ************************/
+
+// Initiates user message sending on Enter key due to input focus
+PASSWORD_INPUT.addEventListener('keypress', changeProfileOnEnterKey);
+PROFILE_INPUT.addEventListener('keypress', changeProfileOnEnterKey);
+
+// Points to user that he changed field's value
+PASSWORD_INPUT.addEventListener('input', makeRedBorder);
+PROFILE_INPUT.addEventListener('input', makeRedBorder);
+
+// Sends to server modificated users profile data
+CHANGE_BUTTON.addEventListener('click', changeProfileOnServerSide);

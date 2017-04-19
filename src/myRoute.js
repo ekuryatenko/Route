@@ -1,6 +1,8 @@
 // TODO: resolve path for ESLint ... or unresolve
+// TODO: __dirname - https://www.airpair.com/javascript/posts/using-es6-harmony-with-nodejs`
+
 import path from 'path';
-import { incomingMailHandler } from './routeHandlers/incomingMailHandler';
+import incomingMailHandler from './routeHandlers/incomingMailHandler';
 import adminHandler from './routeHandlers/adminGeneratorHandler';
 import loginHandler from './routeHandlers/loginHandler';
 import signInHandler from './routeHandlers/signInHandler';
@@ -9,6 +11,7 @@ import setUserProfileHandler from './routeHandlers/setUserProfileHandler';
 import getAdminPageHandler from './routeHandlers/getAdminPageHandler';
 import removeUserProfileHandler from './routeHandlers/removeUserProfileHandler';
 import updateAdminTemplateHandler from './routeHandlers/updateAdminTemplateHandler';
+import sendToAllAdminHandler from './routeHandlers/adminBroadcastEmailHandler';
 
 // Main routes for app server
 export default [
@@ -43,13 +46,11 @@ export default [
   {
     method: 'GET',
     path: '/getUserProfileHandler/{user}',
-    // TODO: test if no params in url
     handler: (request, reply) => {
       getUserProfileHandler(reply, request.params.user);
     }
   },
   {
-    // TODO: POST ?   + think how to decompose this array of handlers
     method: 'POST',
     path: '/setUserProfile',
     handler: (request, reply) => {
@@ -72,6 +73,13 @@ export default [
   },
   {
     method: 'GET',
+    path: '/sendEmailToAll',
+    handler: (request, reply) => {
+      sendToAllAdminHandler(reply);
+    }
+  },
+  {
+    method: 'GET',
     path: '/removeUserProfile/{user}',
     handler: (request, reply) => {
       removeUserProfileHandler(reply, request.params.user);
@@ -81,7 +89,6 @@ export default [
     method: 'GET',
     path: '/',
     handler: {
-      // TODO: check comments
       // Search for the given view, render the template and reply the HTML content
       // Absolute paths are not allowed in views
       view: 'logInForm.pug'
@@ -121,7 +128,6 @@ export default [
       view: 'adminProfileForm.pug'
     }
   }, {
-    // TODO: __dirname - https://www.airpair.com/javascript/posts/using-es6-harmony-with-nodejs
     method: 'GET',
     path: '/routeStyle.css',
     handler: {
