@@ -6,13 +6,13 @@ const PATTERN = /{{userName}}/g;
 
 export default (function () {
   return {
-    /**
-     * Sends email to single user
-     *
-     * @param {Object} mailContent - single user email data
-     * @param {Object} transporter - nodemailer object
-     * @return {Promise} returns Promise with result string
-     */
+  /**
+   * Sends email to single user
+   *
+   * @param {Object} mailContent - single user email data
+   * @param {Object} transporter - nodemailer object
+   * @return {Promise} returns Promise with result string
+   */
     sendEmail(mailContent, transporter) {
       return new Promise((resolve, reject) => {
         /**
@@ -20,7 +20,7 @@ export default (function () {
          * https://nodemailer.com/usage/using-gmail/
          */
 
-          // Send email with defined transport object
+        // Send email with defined transport object
         transporter.sendMail(mailContent, (err, info) => {
           if (err) {
             reject(err);
@@ -35,14 +35,13 @@ export default (function () {
       });
     },
 
-    /**
-     * Sends emails to all receivers from db in cycle
-     * Prepares unique email text for every user
-     * Carries sending statistics to resume result of
-     * sending in param callback
-     *
-     * @param {Object} mailingContent - db Content: users and text
-     */
+  /**
+   * Sends emails to all receivers from db in cycle
+   * Prepares unique email text for every user
+   *
+   * @param {Object} mailingContent - db Content: users and text
+   * @return {String} returns - Sending statistics to resume result
+   */
     sendEmailsInCycle: function* (mailingContent) {
       // Creates reusable transporter object using the default SMTP transport
       const transporter = nodemailer.createTransport(smtpTransport({

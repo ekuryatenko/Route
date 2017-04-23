@@ -12,12 +12,12 @@ const PATTERN = /{{userName}}/g;
  */
 export default (function () {
   return {
-    /**
-     * Parses addresses from current inbound email
-     *
-     * @param {Object} request - SENDGRID request with inbound email
-     * @return {Object} addresses - email sender and receiver addresses
-     */
+  /**
+   * Parses addresses from current inbound email
+   *
+   * @param {Object} request - SENDGRID request with inbound email
+   * @return {Object} addresses - email sender and receiver addresses
+   */
     getIncomingMailAddresses(request) {
       const data = request.payload;
 
@@ -26,19 +26,19 @@ export default (function () {
         incomingReciever: data.to
       };
 
-      console.log(`SENDGRID GET MESSAGE`);
+      console.log('SENDGRID GET MESSAGE');
       console.log(`FROM: ${addresses.incomingSender} TO: ${addresses.incomingReciever}`);
 
       return addresses;
     },
 
-    /**
-     * Sends email due to SENDGRID REST API with
-     * "from" and "to" addresses filled
-     *
-     * @param {Object} mailContent
-     * @return {Promise} returns Promise with result string
-     */
+  /**
+   * Sends email due to SENDGRID REST API with
+   * mailContent data
+   *
+   * @param {Object} mailContent
+   * @return {Promise} returns Promise with result string
+   */
     sendEmail(mailContent) {
       return new Promise((resolve, reject) => {
         const helper = sg.mail;
@@ -69,18 +69,13 @@ export default (function () {
     },
 
     /**
-     * Sends emails to all receivers of param arr in cycle
+     * Sends emails to all users in cycle
      * Prepares email text for every user
-     * Carries sending statistics to resume result of
-     * sending in param callback
      *
-     * Haven't managed with promises in cycle here
-     *
-     * @param {Array} arr - Users profiles
-     * @param {string} mainText - Main app reply text
-     * @param {Function} callback - On whole sending cycle finish
+     * @param {Object} mailingContent - db Content: users and text
+     * @return {String} returns - Sending statistics to resume result
      */
-    sendEmailsInCycle: async function (mailingContent){
+    sendEmailsInCycle: async function (mailingContent) {
       const users = mailingContent.users;
       let successfulEmailsQty = 0;
       const emailsQty = users.length;
@@ -102,10 +97,14 @@ export default (function () {
           html: ''                                    // html body
         };
 
-        const status = await this.sendEmail(mailContent);
-
-        if (parseInt(status) < 400) {
-          successfulEmailsQty += 1;
+        try {
+          const status = await this.sendEmail(mailContent);
+          console.log('---------EMAIL SENT');
+          if (parseInt(status) < 400) {
+            successfulEmailsQty += 1;
+          }
+        } catch (e) {
+          console.error('---------SENDING ERROR: ', e);
         }
       }
       return (`IT WERE SENDED ${successfulEmailsQty} EMAILS OF ${emailsQty}`);
