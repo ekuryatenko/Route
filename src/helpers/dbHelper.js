@@ -14,7 +14,7 @@ function connectToDb() {
       if (err) {
         reject(err);
       }
-      console.log("connectToDb");
+      if (process.env.NODE_ENV !== 'production') console.log("connectToDb");
       resolve(db);
     });
   });
@@ -35,7 +35,7 @@ function insertToDb(newProfile, db) {
       .then(
         (res) => {
           db.close();
-          console.log("inserted: ", newProfile);
+          if (process.env.NODE_ENV !== 'production') console.log("inserted: ", newProfile);
           resolve('OK');
         });
   });
@@ -72,7 +72,6 @@ function getUserProfileFromDb(user, db) {
   });
 }
 
-
 /**
  * Provides library for db methods
  */
@@ -88,7 +87,6 @@ export default (function () {
       return connectToDb()
         .then(
         (db) => {
-          console.log('connected: ', newProfile);
           insertToDb(newProfile, db);
         })
         .catch((error) => {

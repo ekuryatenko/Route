@@ -66,8 +66,6 @@ export default async function (request, reply) {
   // Parse addresses from incoming email
   const parsedAddresses = sgHelper.getIncomingMailAddresses(request);
 
-  console.log('SENDGRID GET EMAIL FROM: ', parsedAddresses.incomingSender);
-
   try {
     const profile = await dbHelper.getUserProfile(parsedAddresses.incomingSender);
     if (profile) {

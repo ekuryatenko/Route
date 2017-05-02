@@ -7,3 +7,4 @@ Simple mailing handler, with users profiles and authorization:
 - inbound handling with Sendgrid API
 - Nodemailer emails sending
 - Hapi, MongoDb, Promises, Generators, Async/await
+- Readable stream in admin path reply
