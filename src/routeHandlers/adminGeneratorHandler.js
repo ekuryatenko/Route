@@ -59,7 +59,12 @@ function* adminRequestHandler(request, reply) {
     const mainText = yield dbHelper.getMainText('1');
     // Prepare users
     const users = yield dbHelper.getAllUsers();
-    const adminIdx = users.findIndex(item => item.user_email === 'admin');
+    const adminIdx = users.findIndex(item => item.userEmail === 'admin');
+
+    if (adminIdx < 0) {
+      reply('SERVER BASE ERROR');
+      return;
+    }
     users.splice(adminIdx, 1);
 
     const mailingContent = {};

@@ -56,10 +56,6 @@ export default (function () {
 
         // Sending
         sg.API(sgRequest, (error, response) => {
-          console.log('emailHelper: ', mailContent.text);
-          console.log(response.statusCode);
-          console.log(response.body);
-          // console.log(response.headers);
           if (error) {
             reject(error);
           }
@@ -91,7 +87,7 @@ export default (function () {
         // Setup common email content
         const mailContent = {
           from: BROADCAST_SENDER,                     // sender address
-          to: item.user_email,                        // list of receivers
+          to: item.userEmail,                        // list of receivers
           subject: mailingContent.subject,            // Subject line
           text: text,                                 // plaintext body
           html: ''                                    // html body

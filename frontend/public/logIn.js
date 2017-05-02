@@ -24,7 +24,7 @@ const SIGNIN_BUTTON = getNode('#signInButton');
  */
 function submitForm(userEmail, fpass) {
   // There are no JSON need to retrieve fields values on server with such request
-  const requestBody = `user_email=${encodeURIComponent(userEmail)}` +
+  const requestBody = `userEmail=${encodeURIComponent(userEmail)}` +
     `&fpass=${encodeURIComponent(fpass)}`;
 
   return httpPostForm('/login', requestBody);

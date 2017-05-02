@@ -11,8 +11,11 @@ const DB_URI = process.env.MONGODB_URI;
 function connectToDb() {
   return new Promise((resolve, reject) => {
     MONGO_CLIENT.connect(DB_URI, (err, db) => {
+      if (err) {
+        reject(err);
+      }
+      console.log("connectToDb");
       resolve(db);
-      reject(err);
     });
   });
 }
@@ -27,11 +30,14 @@ function connectToDb() {
 function insertToDb(newProfile, db) {
   return new Promise((resolve, reject) => {
     const users = db.collection('users');
-    users.insertOne(newProfile, () => {
-      db.close();
-      resolve('OK');
-      reject(new Error());
-    });
+
+    users.insertOne(newProfile)
+      .then(
+        (res) => {
+          db.close();
+          console.log("inserted: ", newProfile);
+          resolve('OK');
+        });
   });
 }
 
@@ -48,7 +54,7 @@ function getUserProfileFromDb(user, db) {
     const users = db.collection('users');
     users
       .find({
-        user_email: user
+        userEmail: user
       })
       .limit(1)
       .next((err, profile) => {
@@ -82,6 +88,7 @@ export default (function () {
       return connectToDb()
         .then(
         (db) => {
+          console.log('connected: ', newProfile);
           insertToDb(newProfile, db);
         })
         .catch((error) => {
@@ -117,11 +124,12 @@ export default (function () {
       return connectToDb()
         .then(
           db => new Promise((resolve, reject) => {
+            // Fetch a specific collection (containing the actual collection information)
             const users = db.collection('users');
 
             const remainInResult = {
               _id: 0,
-              user_email: 1,
+              userEmail: 1,
               password: 1,
               emailTemplate: 1
             };
@@ -195,7 +203,7 @@ export default (function () {
             const users = db.collection('users');
 
             const filter = {
-              user_email: user // TODO: modify to CameCase+quotes - check db
+              userEmail: user // TODO: modify to CameCase+quotes - check db
             };
 
             users.deleteOne(filter, () => {
@@ -223,7 +231,7 @@ export default (function () {
         (db) => {
           const users = db.collection('users');
           const find = {
-            user_email: newProfile.user_email
+            userEmail: newProfile.userEmail
           };
           const update = {
             $set: {

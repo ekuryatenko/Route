@@ -12,7 +12,13 @@ async function adminBroadcastEmailHandler(reply) {
     const mainText = await dbHelper.getMainText('1');
     // Prepare users
     const users = await dbHelper.getAllUsers();
-    const adminIdx = users.findIndex(item => item.user_email === 'admin');
+    const adminIdx = users.findIndex(item => item.userEmail === 'admin');
+
+    if (adminIdx < 0) {
+      reply('SERVER BASE ERROR');
+      return;
+    }
+
     users.splice(adminIdx, 1);
 
     const mailingContent = {};
@@ -22,8 +28,8 @@ async function adminBroadcastEmailHandler(reply) {
 
     // Start emails sending
     const emailSendingStat = await sgHelper.sendEmailsInCycle(mailingContent);
-    console.log(emailSendingStat);
-    reply(emailSendingStat);
+    console.log(`STATISTIC: ${emailSendingStat}`);
+    reply(`STATISTIC: ${emailSendingStat}`);
   } catch (err) {
     console.log(err);
     reply('SERVER ERROR');

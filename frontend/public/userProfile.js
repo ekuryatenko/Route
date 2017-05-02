@@ -36,7 +36,7 @@ function getProfileData() {
     .then(
       (response) => {
         const profile = JSON.parse(response);
-        USER_LABEL.innerHTML = profile.user_email;
+        USER_LABEL.innerHTML = profile.userEmail;
         PASSWORD_INPUT.value = profile.password;
         PROFILE_INPUT.value = profile.emailTemplate;
 
@@ -60,7 +60,7 @@ function sendModifiedProfile() {
   }
 
   const profileObj = {
-    user_email: USER_LABEL.innerHTML,
+    userEmail: USER_LABEL.innerHTML,
     password: PASSWORD_INPUT.value,
     emailTemplate: PROFILE_INPUT.value
   };

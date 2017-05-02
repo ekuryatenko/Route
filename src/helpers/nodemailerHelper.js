@@ -67,7 +67,7 @@ export default (function () {
         // Setup common email content
         const mailContent = {
           from: process.env.NODE_MAILER_SENDER_EMAIL, // sender address
-          to: item.user_email,                        // list of receivers
+          to: item.userEmail,                        // list of receivers
           subject: mailingContent.subject,               // Subject line
           text: text,                                 // plaintext body
           html: ''                                    // html body

@@ -1,5 +1,5 @@
 import dbHelper from './../helpers/dbHelper';
-// TODO: console.log
+
 const USER_PROFILE_PAGE = 'userProfileForm.html';
 const ADMIN_PAGE = 'adminProfileForm.html';
 const LOG_IN_PAGE = 'logInForm.html';
@@ -21,7 +21,7 @@ function findUserInBase(userEmail, userPassword) {
 
         if (users.length) {
           users.forEach((item) => {
-            if (item.user_email === userEmail) {
+            if (item.userEmail === userEmail) {
               found = true;
 
               if (item.password === userPassword) {
@@ -57,7 +57,7 @@ function findUserInBase(userEmail, userPassword) {
 export default function (request, reply) {
   if (request.payload) {
     const loginInfo = request.payload;
-    const userEmail = loginInfo.user_email;
+    const userEmail = loginInfo.userEmail;
     const userPassword = loginInfo.fpass;
     // Will hold activities for client side when server reply is get
     const actionsForClient = [];
@@ -94,7 +94,7 @@ export default function (request, reply) {
             href: SIGN_IN_PAGE
           });
         }
-        console.log(actionsForClient);
+
         reply(JSON.stringify(actionsForClient));
       }
     );

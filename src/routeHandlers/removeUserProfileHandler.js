@@ -1,5 +1,5 @@
 import dbHelper from './../helpers/dbHelper';
-// TODO: console.log
+
 const DEFAULT_TEMPLATE_TEXT = 'Hello';
 
 /**
@@ -23,7 +23,7 @@ export default function (reply, userEmail) {
       } else {
         adminPageContent.templateText = DEFAULT_TEMPLATE_TEXT;
       }
-      console.log(adminPageContent);
+
       reply(JSON.stringify(adminPageContent));
     });
 }

@@ -1,5 +1,5 @@
 import dbHelper from './../helpers/dbHelper';
-// TODO: console.log
+
 const USER_PROFILE_PAGE = 'userProfileForm.html';
 
 /**
@@ -17,7 +17,7 @@ function findUserInBase(userEmail, userPassword) {
         let found = false;
         if (users.length) {
           users.forEach((item) => {
-            if (item.user_email === userEmail) {
+            if (item.userEmail === userEmail) {
               found = true;
               if (item.password === userPassword) {
                 if (userEmail.toLowerCase() !== 'admin') {
@@ -47,10 +47,11 @@ function findUserInBase(userEmail, userPassword) {
  */
 function addUserToBase(userEmail, userPassword) {
   const profile = {
-    user_email: userEmail,
+    userEmail: userEmail,
     password: userPassword,
     emailTemplate: (userEmail.indexOf('@') > -1) ? userEmail.substr(0, userEmail.indexOf('@')) : userEmail
   };
+
   return dbHelper.addUserToBase(profile);
 }
 
@@ -65,11 +66,11 @@ function addUserToBase(userEmail, userPassword) {
  */
 export default function (request, reply) {
   if (request.payload) {
-    const loginInfo = request.payload;
-    console.log(loginInfo);
+    const signInInfo = request.payload;
 
-    const thisUserEmail = loginInfo.user_email;
-    const thisUserPassword = loginInfo.fpass;
+    const thisUserEmail = signInInfo.userEmail;
+    const thisUserPassword = signInInfo.fpass;
+
     // Will hold activities for client side when server reply is get
     const actionsForClient = [];
 
@@ -110,7 +111,6 @@ export default function (request, reply) {
       })
       .then(
       () => {
-        console.log(actionsForClient);
         reply(JSON.stringify(actionsForClient));
       });
   }

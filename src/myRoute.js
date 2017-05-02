@@ -3,7 +3,7 @@
 
 import path from 'path';
 import incomingMailHandler from './routeHandlers/incomingMailHandler';
-import adminHandler from './routeHandlers/adminGeneratorHandler';
+import adminPathReqHandler from './routeHandlers/adminGeneratorHandler';
 import loginHandler from './routeHandlers/loginHandler';
 import signInHandler from './routeHandlers/signInHandler';
 import getUserProfileHandler from './routeHandlers/getUserProfileHandler';
@@ -11,7 +11,7 @@ import setUserProfileHandler from './routeHandlers/setUserProfileHandler';
 import getAdminPageHandler from './routeHandlers/getAdminPageHandler';
 import removeUserProfileHandler from './routeHandlers/removeUserProfileHandler';
 import updateAdminTemplateHandler from './routeHandlers/updateAdminTemplateHandler';
-import sendToAllAdminHandler from './routeHandlers/adminBroadcastEmailHandler';
+import adminPageReqHandler from './routeHandlers/adminBroadcastEmailHandler';
 
 // Main routes for app server
 export default [
@@ -33,7 +33,7 @@ export default [
     method: 'POST',
     path: '/admin',
     handler: (request, reply) => {
-      adminHandler(request, reply);
+      adminPathReqHandler(request, reply);
     }
   },
   {
@@ -75,7 +75,7 @@ export default [
     method: 'GET',
     path: '/sendEmailToAll',
     handler: (request, reply) => {
-      sendToAllAdminHandler(reply);
+      adminPageReqHandler(reply);
     }
   },
   {

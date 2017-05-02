@@ -11,7 +11,6 @@ import dbHelper from './../helpers/dbHelper';
 export default function (request, reply) {
   if (request.payload) {
     const modificatedProfile = request.payload;
-    console.log(modificatedProfile);
 
     dbHelper.updateProfile(modificatedProfile)
       .then(

@@ -15,6 +15,7 @@ export default function (reply) {
   dbHelper.getAllUsers()
   .then((users) => {
     adminPageContent.usersList = users;
+
     return users;
   })
   .then(() => dbHelper.getMainText('1'))

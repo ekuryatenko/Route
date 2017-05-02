@@ -59,13 +59,15 @@ function setAdminPageContent(pageContent) {
   TEMPLATE_TEXT_FIELD.value = pageContent.templateText;
 
   pageContent.usersList.forEach((item) => {
-    if (item.user_email.toUpperCase() !== 'ADMIN') {
+    if(!item.userEmail) return;
+
+    if (item.userEmail.toUpperCase() !== 'ADMIN') {
       const newLi = document.createElement('li');
 
       const newA = document.createElement('a');
       newA.href = '#';
-      newA.innerHTML = `${item.user_email}: ${item.password}`;
-      newA.name = item.user_email;
+      newA.innerHTML = `${item.userEmail}: ${item.password}`;
+      newA.name = item.userEmail;
 
       newLi.appendChild(newA);
       BASE_USERS_LIST.appendChild(newLi);

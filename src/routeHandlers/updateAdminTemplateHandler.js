@@ -1,5 +1,5 @@
 import dbHelper from './../helpers/dbHelper';
-// TODO: console.log
+
 /**
  * Fires when admin has submitted new text template from admin page
  * Saves new template in db, and admin get prompt
@@ -10,7 +10,6 @@ import dbHelper from './../helpers/dbHelper';
 export default function (request, reply) {
   if (request.payload) {
     const newAdminTemplate = request.payload;
-    console.log(newAdminTemplate);
 
     // Update database template text
     dbHelper.updateTemplate(newAdminTemplate)
